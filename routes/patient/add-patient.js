@@ -13,66 +13,26 @@ var pdf = require("html-pdf");
 const signatureHtml = require("../../public/pdf/Singnature");
 const consentHtml = require("../../public/pdf/tetindConsent");
 
-// const schema = Joi.object({
-//   first_name: Joi.string().required(),
-//   last_name: Joi.string().required(),
-//   full_name: Joi.string().required(),
-//   email: Joi.string().email().required(),
-//   delivery_method: Joi.string(),
-//   is_tested: Joi.string(),
-//   is_insured: Joi.boolean(),
-//   telephone: Joi.string().min(14).required(),
-//   address: Joi.string().required(),
-//   city: Joi.string().required(),
-//   state: Joi.string().required(),
-//   zip_code: Joi.string().required(),
-//   date_of_birth: Joi.date().required(),
-//   age: Joi.number().required(),
-//   location: Joi.string(), //.required(),
-//   // signature: Joi.string().required(), // PDF file // Blob Image
-//   doc_prescription: Joi.boolean(),
-//   doc_prescription_url: Joi.string(),
-//   test_type: Joi.string().required(),
-//   sex: Joi.string().required(),
-//   passport: Joi.boolean(),
-//   // covid_test_form: Joi.string().required(), // PDF file
-//   // id_image: Joi.string(), // Image
-//   // identity_card: Joi.string().required(), // Image
-//   // insurance_image: Joi.string().required(), // Image
-//   // patient_test_result_sign_off: Joi.string().required(), // PDF file
-//   tested_by: Joi.string().required(), // Object id of who tested
-//   tested_date: Joi.date().required(),
-// });
-
 const addPatient = async (req, res) => {
   try {
     // searching mp by id and after that getting all user with same mid and searching manager. If manager found then check reuired fileds if it's exist so required it in joi and if there is no lab created so return text with "No Lab created"
-    const medicalProfession = await findOne("user", { _id: req.userId });
-    const allUsers = await getPopulatedData(
+    const medicalProfession = await getPopulatedData(
       "user",
-      { mid: medicalProfession.mid },
-      "type",
-      "type"
+      { _id: req.userId },
+      "employee_location"
     );
-    const manager = allUsers.filter((user) => user.type.type === "Manager");
-    if (!manager.length) {
-      return res
-        .status(400)
-        .send({ status: 400, message: "No Manager Found with your mid" });
-    }
-    if (!manager[0].lab_required_fields.length) {
-      return res
-        .status(400)
-        .send({ status: 400, message: "No Lab Created by your Manager" });
-    }
+    const { employee_location } = medicalProfession[0];
+    const { patient_required_fields } = employee_location;
     // creating an empty object and looping values from manager required fields and inserting keys which are required values and keys values are Joi.required()
     let obj = {};
-    for (let i = 0; i < manager[0].lab_required_fields.length; i++) {
-      obj[manager[0].lab_required_fields[i]] = Joi.required();
-    }
+    patient_required_fields.map((field) => {
+      obj[field] = Joi.required();
+    });
+    console.log(obj);
+    console.log({ patient_required_fields });
     const schema = Joi.object(obj);
     await schema.validateAsync(req.body);
-    // After validation 
+    // After validation
     const { test_type, tested_by, full_name } = req.body;
     const check_test_type_exist = await findOne("testType", {
       type: test_type,
