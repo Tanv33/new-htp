@@ -5,8 +5,9 @@ const testTypeSchema = new mongoose.Schema(
   {
     name: {
       type: schemaType.TypeString,
+      unique: true,
     },
-    type: {
+    types: {
       type: schemaType.TypeArray,
       default: [],
     },

@@ -10,5 +10,6 @@ db.otp = require("./otp");
 db.patient = require("./patient");
 db.testType = require("./test-type");
 db.NumberGeneratorModel = require("./number-generator-model");
+db.location = require("./location");
 
 module.exports = db;

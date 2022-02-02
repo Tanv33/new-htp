@@ -58,15 +58,17 @@ const userSchema = new mongoose.Schema(
     manager_logo: {
       type: schemaType.TypeString,
     },
-    lab_required_fields: {
-      type: schemaType.TypeArray,
-    },
     created_date: {
       type: schemaType.TypeDate,
       default: Date.now,
     },
-    location: {
+    manager_location: {
       type: [schemaType.TypeObjectId],
+      ref: "location",
+      requried: true,
+    },
+    employee_location: {
+      type: schemaType.TypeObjectId,
       ref: "location",
       requried: true,
     },

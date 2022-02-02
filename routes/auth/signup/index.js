@@ -24,6 +24,7 @@ const managerSchema = Joi.object({
     .required(),
 });
 const employeeSchema = Joi.object({
+  type: Joi.string().required(),
   first_name: Joi.string().required(),
   last_name: Joi.string().required(),
   date_of_birth: Joi.date().required(),
@@ -33,13 +34,12 @@ const employeeSchema = Joi.object({
   state: Joi.string().required(),
   zip_code: Joi.string().required(),
   email: Joi.string().email().required(),
-  type: Joi.string().required(),
-  location: Joi.string().required(),
   password: Joi.string()
     .min(6)
     .pattern(new RegExp("^[a-zA-Z0-9]{6,30}$"))
     .required(),
   mid: Joi.string().required(),
+  employee_location: Joi.string().required(),
 });
 const adminSchema = Joi.object({
   full_name: Joi.string().required(),
@@ -63,6 +63,7 @@ const signUpUser = async (req, res) => {
     mid,
     telephone,
     date_of_birth,
+    employee_location,
     address,
     city,
     state,
@@ -233,6 +234,7 @@ const signUpUser = async (req, res) => {
         telephone,
         address,
         city,
+        employee_location,
         state,
         zip_code,
         location,

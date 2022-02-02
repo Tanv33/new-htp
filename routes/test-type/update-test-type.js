@@ -1,18 +1,17 @@
-const { updateDocument } = require("../../helpers");
+const { pushIfNotExists } = require("../../helpers");
 const Joi = require("joi");
 
 const schema = Joi.object({
-  name: Joi.string().required(),
-  type: Joi.array().required(),
+  types: Joi.string().required(),
 });
 
 const updateTestType = async (req, res) => {
   try {
     await schema.validateAsync(req.body);
-    const test_type_updated = await updateDocument(
+    const test_type_updated = await pushIfNotExists(
       "testType",
       { _id: req.params.id },
-      req.body
+      { types: req.body.types }
     );
     return res.status(200).send({ status: 200, test_type_updated });
   } catch (e) {

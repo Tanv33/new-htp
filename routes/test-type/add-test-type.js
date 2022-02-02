@@ -11,6 +11,7 @@ const addTestType = async (req, res) => {
     const test_type = await insertNewDocument("testType", req.body);
     return res.status(200).send({ status: 200, test_type });
   } catch (e) {
+    console.log(e);
     return res.status(400).send({ status: 400, messagw: e.message });
   }
 };

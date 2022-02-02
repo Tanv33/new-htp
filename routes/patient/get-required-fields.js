@@ -1,28 +1,17 @@
-const { findOne, getPopulatedData } = require("../../helpers");
+const { getPopulatedData } = require("../../helpers");
 
 const getRequiredFields = async (req, res) => {
   try {
-    const medicalProfession = await findOne("user", { _id: req.userId });
-    const allUsers = await getPopulatedData(
+    // const medicalProfession = await findOne("user", { _id: req.userId });
+    const medicalProfession = await getPopulatedData(
       "user",
-      { mid: medicalProfession.mid },
-      "type",
-      "type"
+      { _id: req.userId },
+      "type employee_location"
     );
-    const manager = allUsers.filter((user) => user.type.type === "Manager");
-    if (!manager.length) {
-      return res
-        .status(400)
-        .send({ status: 400, message: "No Manager Found with your mid" });
-    }
-    if (!manager[0].lab_required_fields.length) {
-      return res
-        .status(400)
-        .send({ status: 400, message: "No Lab Created by your Manager" });
-    }
+    const { employee_location } = medicalProfession[0];
     return res.status(200).send({
       status: 200,
-      lab_required_fields: manager[0].lab_required_fields,
+      employee_location,
     });
   } catch (e) {
     return res.status(400).send({ status: 400, message: e.message });
