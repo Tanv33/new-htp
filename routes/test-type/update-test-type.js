@@ -2,8 +2,8 @@ const { updateDocument } = require("../../helpers");
 const Joi = require("joi");
 
 const schema = Joi.object({
-  type: Joi.string().required(),
-  status: Joi.string().required(),
+  name: Joi.string().required(),
+  type: Joi.array().required(),
 });
 
 const updateTestType = async (req, res) => {

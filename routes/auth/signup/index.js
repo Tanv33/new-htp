@@ -45,10 +45,8 @@ const adminSchema = Joi.object({
   full_name: Joi.string().required(),
   email: Joi.string().email().required(),
   type: Joi.string().required(),
-  password: Joi.string()
-    .min(6)
-    .pattern(new RegExp("^[a-zA-Z0-9]{6,30}$"))
-    .required(),
+  telephone: Joi.string().min(14).required(),
+  password: Joi.string().min(6).required(),
 });
 
 const signUpUser = async (req, res) => {
@@ -91,6 +89,7 @@ const signUpUser = async (req, res) => {
       const new_user = await insertNewDocument("user", {
         full_name,
         email,
+        telephone,
         type: _id,
         status: "Active",
         password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),

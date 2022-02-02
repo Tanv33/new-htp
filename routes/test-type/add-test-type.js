@@ -2,8 +2,7 @@ const Joi = require("joi");
 const { insertNewDocument } = require("../../helpers");
 
 const schema = Joi.object({
-  type: Joi.string().required(),
-  status: Joi.string().required(),
+  name: Joi.string().required(),
 });
 
 const addTestType = async (req, res) => {

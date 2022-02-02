@@ -3,10 +3,12 @@ const schemaType = require("../../types");
 
 const testTypeSchema = new mongoose.Schema(
   {
-    type: {
+    name: {
       type: schemaType.TypeString,
-      unique: true,
-      required: true,
+    },
+    type: {
+      type: schemaType.TypeArray,
+      default: [],
     },
     status: {
       type: schemaType.TypeString,
