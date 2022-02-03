@@ -58,6 +58,9 @@ const userSchema = new mongoose.Schema(
     manager_logo: {
       type: schemaType.TypeString,
     },
+    manager_signature: {
+      type: schemaType.TypeString,
+    },
     created_date: {
       type: schemaType.TypeDate,
       default: Date.now,

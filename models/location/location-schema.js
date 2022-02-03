@@ -35,6 +35,21 @@ const locationSchema = new mongoose.Schema(
       type: schemaType.TypeArray,
       required: true,
     },
+    production: {
+      type: schemaType.TypeString,
+    },
+    production_email: {
+      type: schemaType.TypeString,
+    },
+    location_id: {
+      type: schemaType.TypeString,
+    },
+    location_first_name: {
+      type: schemaType.TypeString,
+    },
+    location_last_name: {
+      type: schemaType.TypeString,
+    },
   },
   { timestamps: true }
 );

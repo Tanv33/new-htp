@@ -14,7 +14,7 @@ const managerSchema = Joi.object({
   full_name: Joi.string().required(),
   email: Joi.string().email().required(),
   mid: Joi.string().required(),
-  telephone: Joi.string().min(14).required(),
+  telephone: Joi.string().min(17).required(),
   lab_name: Joi.string().required(),
   lab_address: Joi.string().required(),
   type: Joi.string().required(),
@@ -28,7 +28,7 @@ const employeeSchema = Joi.object({
   first_name: Joi.string().required(),
   last_name: Joi.string().required(),
   date_of_birth: Joi.date().required(),
-  telephone: Joi.string().min(14).required(),
+  telephone: Joi.string().min(17).required(),
   address: Joi.string().required(),
   city: Joi.string().required(),
   state: Joi.string().required(),
@@ -45,7 +45,7 @@ const adminSchema = Joi.object({
   full_name: Joi.string().required(),
   email: Joi.string().email().required(),
   type: Joi.string().required(),
-  telephone: Joi.string().min(14).required(),
+  telephone: Joi.string().min(17).required(),
   password: Joi.string().min(6).required(),
 });
 
@@ -99,16 +99,24 @@ const signUpUser = async (req, res) => {
     }
     // For Manager
     if (type === "Manager") {
-      console.log(req.file);
-      if (!req.file) {
+      console.log(req.files);
+      if (!req.files) {
         return res.status(400).send({
           status: 400,
-          message: "Manager Logo Required key should be manager_logo",
+          message: "Manager Logo & Manager Signature Required",
         });
       }
       let imageType = ["image/png", "image/jpeg", "image/jpg", "image/gif"];
-      if (req.file) {
-        if (!imageType.includes(req.file.mimetype)) {
+      if (req.files) {
+        if (!imageType.includes(req?.files?.manager_logo[0]?.mimetype)) {
+          return res.status(400).send({
+            status: 400,
+            message: "File should be an image",
+          });
+        }
+      }
+      if (req.files) {
+        if (!imageType.includes(req?.files?.manager_signature[0]?.mimetype)) {
           return res.status(400).send({
             status: 400,
             message: "File should be an image",
@@ -136,8 +144,8 @@ const signUpUser = async (req, res) => {
       }
       const { _id } = check_user_type_exist;
       const logoUpload = await dbx.filesUpload({
-        path: "/managerlogos/" + mid + "-" + req.file.filename,
-        contents: fs.readFileSync(req.file.path),
+        path: "/managerlogos/" + mid + "-" + req.files.manager_logo[0].filename,
+        contents: fs.readFileSync(req.files.manager_logo[0].path),
       });
       if (!logoUpload) {
         return res
@@ -159,6 +167,40 @@ const signUpUser = async (req, res) => {
           message: "Error in getting link of Manager Logo",
         });
       }
+      const managerSignatureUpload = await dbx.filesUpload({
+        path:
+          "/manager signature/" +
+          mid +
+          "-" +
+          req.files.manager_signature[0].filename,
+        contents: fs.readFileSync(req.files.manager_signature[0].path),
+      });
+      if (!managerSignatureUpload) {
+        return res.status(400).send({
+          status: 400,
+          message: "Error in uploading Manager Signature",
+        });
+      }
+      const managerSignatureUrl = await dbx.sharingCreateSharedLinkWithSettings(
+        {
+          path: managerSignatureUpload.result.path_display,
+          settings: {
+            requested_visibility: "public",
+            audience: "public",
+            access: "viewer",
+          },
+        }
+      );
+      if (!managerSignatureUrl) {
+        return res.status(400).send({
+          status: 400,
+          message: "Error in getting link of Manager Logo",
+        });
+      }
+      req.body.manager_signature = managerSignatureUrl.result.url?.replace(
+        /dl=0$/,
+        "raw=1"
+      );
       req.body.manager_logo = mangerLogoSharedLink.result.url?.replace(
         /dl=0$/,
         "raw=1"
@@ -172,6 +214,7 @@ const signUpUser = async (req, res) => {
         lab_address,
         type: _id,
         manager_logo: req.body.manager_logo,
+        manager_signature: req.body.manager_signature,
         password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
       });
       // res.status(200).send({ status: 200, user: new_user });
@@ -183,7 +226,8 @@ const signUpUser = async (req, res) => {
         "Account Created",
         email
       );
-      fs.unlinkSync(req.file.path);
+      fs.unlinkSync(req.files.manager_logo[0].path);
+      fs.unlinkSync(req.files.manager_signature[0].path);
       return res.status(200).send({ status: 200, user: new_user });
     }
     // For Employees

@@ -9,7 +9,14 @@ const { upload } = require("../../lib");
 // const { tokenVerification } = require("../../middleware");
 
 // ROUTES * /api/auth/
-router.post("/register", upload.single("manager_logo"), signUp);
+router.post(
+  "/register",
+  upload.fields([
+    { name: "manager_logo", maxCount: 1 },
+    { name: "manager_signature", maxCount: 1 },
+  ]),
+  signUp
+);
 router.post("/login", loginUser);
 router.post("/forgetpassword", forgetPassword);
 router.post("/checkpassword", checkPassword);

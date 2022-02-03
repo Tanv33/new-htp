@@ -66,6 +66,32 @@ const addPatient = async (req, res) => {
         getSignatureImage = data;
       }
     );
+    // uploading patient signature
+    const patientSignature = await dbx.filesUpload({
+      path:
+        "/patient signature/" +
+        `patient-signature-${randomNumberGenerator(11111, 99999).toFixed(0)}.png`,
+      contents: fs.readFileSync(`./public/patient signature/${pid}.png`),  });
+    if (!patientSignature) {
+      return res
+        .status(400)
+        .send({ status: 400, message: "Error in uploading Patient Signature Image" });
+    }
+    const patientSignatureUrl = await dbx.sharingCreateSharedLinkWithSettings({
+      path: patientSignature.result.path_display,
+      settings: {
+        requested_visibility: "public",
+        audience: "public",
+        access: "viewer",
+      },
+    });
+    if (!patientSignatureUrl) {
+      return res.status(400).send({
+        status: 400,
+        message: "Error in getting shared link of Signature Image",
+      });
+    }
+
     // console.log(getSignatureImage);  // Buffer
     const getSignaturePdf = async () => {
       return new Promise((resolve, reject) => {
@@ -219,6 +245,10 @@ const addPatient = async (req, res) => {
         .status(400)
         .send({ status: 400, message: "Error in getting shared link" });
     }
+    req.body.patient_signature = patientSignatureUrl.result.url?.replace(
+      /dl=0$/,
+      "raw=1"
+    );
     req.body.signature = signatureSharedLink.result.url?.replace(
       /dl=0$/,
       "raw=1"
@@ -297,7 +327,7 @@ const addPatient = async (req, res) => {
     // req?.files.map((file) => {
     //   fs.unlinkSync(file.path);
     // });
-    // console.log(e);
+    console.log(e);
     return res.status(400).send({ status: 400, message: e.message });
   }
 };

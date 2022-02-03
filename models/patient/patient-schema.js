@@ -132,6 +132,10 @@ const patientSchema = new mongoose.Schema(
       type: schemaType.TypeString,
       // required: true,
     },
+    patient_signature: {
+      type: schemaType.TypeString,
+      // required: true,
+    },
     patient_test_result_sign_off: {
       type: schemaType.TypeString,
       // PDF File
