@@ -100,10 +100,16 @@ const signUpUser = async (req, res) => {
     // For Manager
     if (type === "Manager") {
       console.log(req.files);
-      if (!req.files) {
+      if (!req.files.manager_logo) {
         return res.status(400).send({
           status: 400,
-          message: "Manager Logo & Manager Signature Required",
+          message: "Manager Logo Required",
+        });
+      }
+      if (!req.files.manager_signature) {
+        return res.status(400).send({
+          status: 400,
+          message: "Manager Signature Required",
         });
       }
       let imageType = ["image/png", "image/jpeg", "image/jpg", "image/gif"];
