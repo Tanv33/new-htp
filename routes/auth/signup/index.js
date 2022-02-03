@@ -5,6 +5,7 @@ const {
   getPopulatedData,
   find,
   searchDocuments,
+  getDropBoxLink,
 } = require("../../../helpers");
 const bcrypt = require("bcryptjs");
 const fs = require("fs");
@@ -59,7 +60,6 @@ const signUpUser = async (req, res) => {
     first_name,
     last_name,
     type,
-    status,
     mid,
     telephone,
     date_of_birth,
@@ -100,11 +100,20 @@ const signUpUser = async (req, res) => {
     // For Manager
     if (type === "Manager") {
       console.log(req.files);
+      let imageType = ["image/png", "image/jpeg", "image/jpg", "image/gif"];
       if (!req.files.manager_logo) {
         return res.status(400).send({
           status: 400,
           message: "Manager Logo Required",
         });
+      }
+      if (req.files) {
+        if (!imageType.includes(req.files.manager_logo[0].mimetype)) {
+          return res.status(400).send({
+            status: 400,
+            message: "Manager logo should be an image",
+          });
+        }
       }
       if (!req.files.manager_signature) {
         return res.status(400).send({
@@ -112,20 +121,11 @@ const signUpUser = async (req, res) => {
           message: "Manager Signature Required",
         });
       }
-      let imageType = ["image/png", "image/jpeg", "image/jpg", "image/gif"];
       if (req.files) {
-        if (!imageType.includes(req?.files?.manager_logo[0]?.mimetype)) {
+        if (!imageType.includes(req.files.manager_signature[0].mimetype)) {
           return res.status(400).send({
             status: 400,
-            message: "File should be an image",
-          });
-        }
-      }
-      if (req.files) {
-        if (!imageType.includes(req?.files?.manager_signature[0]?.mimetype)) {
-          return res.status(400).send({
-            status: 400,
-            message: "File should be an image",
+            message: "Manager Signature should be an image",
           });
         }
       }
@@ -149,67 +149,16 @@ const signUpUser = async (req, res) => {
           .send({ status: 404, message: "User Type not exist!" });
       }
       const { _id } = check_user_type_exist;
-      const logoUpload = await dbx.filesUpload({
-        path: "/managerlogos/" + mid + "-" + req.files.manager_logo[0].filename,
-        contents: fs.readFileSync(req.files.manager_logo[0].path),
-      });
-      if (!logoUpload) {
-        return res
-          .status(400)
-          .send({ status: 400, message: "Error in uploading Manager Logo" });
-      }
-      const mangerLogoSharedLink =
-        await dbx.sharingCreateSharedLinkWithSettings({
-          path: logoUpload.result.path_display,
-          settings: {
-            requested_visibility: "public",
-            audience: "public",
-            access: "viewer",
-          },
-        });
-      if (!mangerLogoSharedLink) {
-        return res.status(400).send({
-          status: 400,
-          message: "Error in getting link of Manager Logo",
-        });
-      }
-      const managerSignatureUpload = await dbx.filesUpload({
-        path:
-          "/manager signature/" +
+      req.body.manager_logo = await getDropBoxLink(
+        "/managerlogos/" + mid + "-" + req.files.manager_logo[0].filename,
+        req.files.manager_logo[0].path
+      );
+      req.body.manager_signature = await getDropBoxLink(
+        "/manager signature/" +
           mid +
           "-" +
           req.files.manager_signature[0].filename,
-        contents: fs.readFileSync(req.files.manager_signature[0].path),
-      });
-      if (!managerSignatureUpload) {
-        return res.status(400).send({
-          status: 400,
-          message: "Error in uploading Manager Signature",
-        });
-      }
-      const managerSignatureUrl = await dbx.sharingCreateSharedLinkWithSettings(
-        {
-          path: managerSignatureUpload.result.path_display,
-          settings: {
-            requested_visibility: "public",
-            audience: "public",
-            access: "viewer",
-          },
-        }
-      );
-      if (!managerSignatureUrl) {
-        return res.status(400).send({
-          status: 400,
-          message: "Error in getting link of Manager Logo",
-        });
-      }
-      req.body.manager_signature = managerSignatureUrl.result.url?.replace(
-        /dl=0$/,
-        "raw=1"
-      );
-      req.body.manager_logo = mangerLogoSharedLink.result.url?.replace(
-        /dl=0$/,
-        "raw=1"
+        req.files.manager_signature[0].path
       );
       const new_user = await insertNewDocument("user", {
         full_name,

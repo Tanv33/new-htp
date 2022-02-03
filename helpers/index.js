@@ -1,5 +1,7 @@
 const Models = require("../models");
 const QRCode = require("qrcode");
+const { dbx } = require("../lib");
+const fs = require("fs");
 
 const find = async (modelDb, queryObj) =>
   await Models[modelDb].find(queryObj).exec();
@@ -53,6 +55,22 @@ const helperFunctionForQrCode = async (pid) => {
   // });
 };
 
+const getDropBoxLink = async (dropBoxPath, filePath) => {
+  const fileUpload = await dbx.filesUpload({
+    path: dropBoxPath,
+    contents: fs.readFileSync(filePath),
+  });
+  const sharedLink = await dbx.sharingCreateSharedLinkWithSettings({
+    path: fileUpload.result.path_display,
+    settings: {
+      requested_visibility: "public",
+      audience: "public",
+      access: "viewer",
+    },
+  });
+  return sharedLink.result.url?.replace(/dl=0$/, "raw=1");
+};
+
 module.exports = {
   getPopulated,
   searchDocuments,
@@ -66,4 +84,5 @@ module.exports = {
   pushIfNotExists,
   findOneSort,
   helperFunctionForQrCode,
+  getDropBoxLink,
 };
