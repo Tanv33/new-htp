@@ -9,7 +9,7 @@ const {
 } = require("../../../helpers");
 const bcrypt = require("bcryptjs");
 const fs = require("fs");
-const { send_email, dbx } = require("../../../lib");
+const { send_email } = require("../../../lib");
 
 const managerSchema = Joi.object({
   full_name: Joi.string().required(),

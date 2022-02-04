@@ -1,6 +1,10 @@
 const Joi = require("joi");
 const nodemailer = require("nodemailer");
-const { insertNewDocument, findOne } = require("../../../helpers");
+const {
+  insertNewDocument,
+  findOne,
+  generateRandomNumber,
+} = require("../../../helpers");
 const bcrypt = require("bcryptjs");
 const {
   MAIL_HOST,
@@ -24,6 +28,7 @@ const schema = Joi.object({
 });
 
 const forgetPassword = async (req, res) => {
+  let name = "";
   const { email, telephone } = req.body;
   try {
     await schema.validateAsync(req.body);
@@ -34,9 +39,13 @@ const forgetPassword = async (req, res) => {
           .status(400)
           .send({ status: 400, message: "Email not exist" });
       }
+      if (check_email.first_name && check_email.last_name) {
+        name = check_email.first_name + " " + check_email.last_name;
+      }
+      if (check_email.full_name) {
+        name = check_email.full_name;
+      }
       // Function for creating OTP key
-      const generateRandomNumber = (min, max) =>
-        Math.random() * (max - min) + min;
       const otp_key = generateRandomNumber(11111, 99999).toFixed(0);
       await insertNewDocument("otp", {
         otp_key: bcrypt.hashSync(otp_key, bcrypt.genSaltSync(10)),
@@ -45,11 +54,12 @@ const forgetPassword = async (req, res) => {
       send_email(
         res,
         "forgotPassword",
-        { username: check_email.username, OTP: otp_key },
+        { username: name, OTP: otp_key },
         "American Specialty Lab",
         "Verification Key",
         email
       );
+      res.status(200).send({ status: 200, message: "Otp send successfully" });
     }
     if (telephone) {
       // Twilio verification
@@ -61,8 +71,6 @@ const forgetPassword = async (req, res) => {
           .send({ status: 400, message: "Number not exist" });
       }
       // Function for creating OTP key
-      const generateRandomNumber = (min, max) =>
-        Math.random() * (max - min) + min;
       const otp_key = generateRandomNumber(11111, 99999).toFixed(0);
       await insertNewDocument("otp", {
         otp_key: bcrypt.hashSync(otp_key, bcrypt.genSaltSync(10)),

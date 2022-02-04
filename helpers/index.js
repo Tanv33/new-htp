@@ -71,6 +71,8 @@ const getDropBoxLink = async (dropBoxPath, filePath) => {
   return sharedLink.result.url?.replace(/dl=0$/, "raw=1");
 };
 
+const generateRandomNumber = (min, max) => Math.random() * (max - min) + min;
+
 module.exports = {
   getPopulated,
   searchDocuments,
@@ -85,4 +87,5 @@ module.exports = {
   findOneSort,
   helperFunctionForQrCode,
   getDropBoxLink,
+  generateRandomNumber,
 };
