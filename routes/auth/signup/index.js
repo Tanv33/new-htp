@@ -237,7 +237,7 @@ const signUpUser = async (req, res) => {
       send_email(
         res,
         "accoutCreatedTemp",
-        { username: first_name, manager_logo: user[0].manager_logo },
+        { username: first_name, manager_logo: populatedUser[0].manager_logo },
         "American Specialty Lab",
         "Account Created",
         email
