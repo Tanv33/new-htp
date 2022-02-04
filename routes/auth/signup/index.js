@@ -192,10 +192,11 @@ const signUpUser = async (req, res) => {
     user_types = user_types.map((item) => item.type);
     if (user_types.includes(type)) {
       await employeeSchema.validateAsync(req.body);
-      // Get all matching mid
+      const findManagerId = await findOne("userType", { type: "Manager" });
+      // Get  matching mid with manager
       const populatedUser = await getPopulatedData(
         "user",
-        { mid },
+        { mid, type: findManagerId._id },
         "type",
         "type"
       );
@@ -203,15 +204,6 @@ const signUpUser = async (req, res) => {
         return res
           .status(404)
           .send({ status: 404, message: "MID doesn't match" });
-      }
-      // filtering Manager mid exist or not
-      const user = populatedUser.filter(
-        (populatedUser) => populatedUser.type.type === "Manager"
-      );
-      if (!user.length) {
-        return res
-          .status(404)
-          .send({ status: 404, message: "There is no Manager with this MID" });
       }
       const check_email_exist = await findOne("user", { email });
       if (check_email_exist) {
