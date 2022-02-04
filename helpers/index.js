@@ -30,6 +30,18 @@ const getPopulatedData = async (
     .find(searchQuery)
     .populate({ path: populateQuery, select: selectQuery });
 
+const getFindSelectPopulateData = async (
+  modelDb,
+  searchQuery,
+  selectOnFind,
+  populateQuery,
+  selectQuery
+) =>
+  await Models[modelDb]
+    .find(searchQuery)
+    .select(selectOnFind)
+    .populate({ path: populateQuery, select: selectQuery });
+
 const getPopulated = async (modelDb, prevDocRef, populateQuery) =>
   await Models[modelDb].populate(prevDocRef, populateQuery);
 
@@ -88,4 +100,5 @@ module.exports = {
   helperFunctionForQrCode,
   getDropBoxLink,
   generateRandomNumber,
+  getFindSelectPopulateData,
 };
