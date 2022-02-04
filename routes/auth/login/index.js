@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { SECRET } = require("../../../config");
-const { getPopulatedData } = require("../../../helpers");
+const { getPopulatedData, findOne } = require("../../../helpers");
 const Joi = require("joi");
 
 const schema = Joi.object({
@@ -60,7 +60,7 @@ const loginUser = async (req, res) => {
           message: "Your signup request is not approved yet",
         });
       }
-      // getting array of matching MID
+      // Matching type and mid with manager
       const findManagerId = await findOne("userType", { type: "Manager" });
       const { _id } = findManagerId;
       const get_match_mid = await getPopulatedData(
@@ -72,16 +72,7 @@ const loginUser = async (req, res) => {
       if (!get_match_mid.length) {
         return res
           .status(404)
-          .send({ status: 404, message: "MID doesn't match" });
-      }
-      const checkManager = get_match_mid.filter(
-        (element) => element.type.type === "Manager"
-      );
-      if (!checkManager.length) {
-        return res.status(404).send({
-          status: 404,
-          message: "There is no Manager with Your MID",
-        });
+          .send({ status: 404, message: "There is no manager with your mid" });
       }
       var token = jwt.sign({ id: user._id }, SECRET);
       return res.status(200).send({ status: 200, user, token });
