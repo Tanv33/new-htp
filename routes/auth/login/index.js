@@ -61,9 +61,11 @@ const loginUser = async (req, res) => {
         });
       }
       // getting array of matching MID
+      const findManagerId = await findOne("userType", { type: "Manager" });
+      const { _id } = findManagerId;
       const get_match_mid = await getPopulatedData(
         "user",
-        { mid: user.mid },
+        { mid: user.mid, type: _id },
         "type",
         "type"
       );

@@ -6,14 +6,7 @@ const {
   generateRandomNumber,
 } = require("../../../helpers");
 const bcrypt = require("bcryptjs");
-const {
-  MAIL_HOST,
-  MAIL_PORT,
-  MAIL_USER,
-  MAIL_PASS,
-  TWILIO_ACCOUNT_SID,
-  TWILIO_AUTH_TOKEN,
-} = require("../../../config");
+const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN } = require("../../../config");
 const { send_email } = require("../../../lib");
 
 const schema = Joi.object({
