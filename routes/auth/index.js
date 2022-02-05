@@ -3,6 +3,7 @@ const router = express.Router();
 const signUp = require("./signup");
 const loginUser = require("./login");
 const forgetPassword = require("./forgot-password");
+const confrimOtp = require("./confirm-otp");
 const checkPassword = require("./check-password");
 const getManagerMid = require("./get-manager-mid-location");
 const getEmployees = require("./get-employees");
@@ -21,6 +22,7 @@ router.post(
 );
 router.post("/login", loginUser);
 router.post("/forgetpassword", forgetPassword);
+router.post("/confirm-otp", confrimOtp);
 router.post("/checkpassword", checkPassword);
 router.get("/get-manager-mid", getManagerMid);
 router.get("/get-employees", getEmployees);

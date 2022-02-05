@@ -1,11 +1,8 @@
 const Joi = require("joi");
 const bcrypt = require("bcryptjs");
-const { findOneSort, updateDocument } = require("../../../helpers");
+const { findOneSort } = require("../../../helpers");
 
 const schema = Joi.object({
-  otp_key: Joi.string().required(),
-  password: Joi.string().required(),
-  confirm_password: Joi.string().required().valid(Joi.ref("password")),
   preferred_method: Joi.string().required().valid("Email", "Telephone"),
   email: Joi.string()
     .email()
@@ -14,10 +11,11 @@ const schema = Joi.object({
     is: "Telephone",
     then: Joi.required(),
   }),
+  otp_key: Joi.string().required(),
 });
 
-const checkPassword = async (req, res) => {
-  const { otp_key, password, email, telephone } = req.body;
+const confirmOtp = async (req, res) => {
+  const { otp_key, email, telephone } = req.body;
   try {
     await schema.validateAsync(req.body);
     // For Email
@@ -28,26 +26,17 @@ const checkPassword = async (req, res) => {
           .status(400)
           .send({ status: 400, message: "Email not exist" });
       }
+      const otpCreated = new Date(check_user.created).getTime();
+      const now = new Date().getTime();
+      const diff = now - otpCreated;
+      if (diff > 300000 || check_user.used) {
+        return res.status(403).send({ status: 403, message: "OTP expire" });
+      }
       const check_otp = bcrypt.compareSync(otp_key, check_user.otp_key);
       if (!check_otp) {
         return res.status(400).send({ status: 400, message: "Wrong OTP" });
       }
-      if (check_user.used) {
-        return res
-          .status(400)
-          .send({ status: 400, message: "This otp is used" });
-      }
-      await updateDocument(
-        "user",
-        { email },
-        {
-          password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
-        }
-      );
-      await check_user.updateOne({ used: true });
-      return res
-        .status(200)
-        .send({ status: 200, message: "Password updated successfully" });
+      return res.status(200).send({ status: 200, message: "OTP confirmed" });
     }
     // For Telephone
     if (telephone) {
@@ -57,26 +46,17 @@ const checkPassword = async (req, res) => {
           .status(400)
           .send({ status: 400, message: "Telephone not exist" });
       }
+      const otpCreated = new Date(check_telephone.created).getTime();
+      const now = new Date().getTime();
+      const diff = now - otpCreated;
+      if (diff > 300000 || check_telephone.used) {
+        return res.status(403).send({ status: 403, message: "OTP expire" });
+      }
       const check_otp = bcrypt.compareSync(otp_key, check_telephone.otp_key);
       if (!check_otp) {
         return res.status(400).send({ status: 400, message: "Wrong OTP" });
       }
-      if (check_telephone.used) {
-        return res
-          .status(400)
-          .send({ status: 400, message: "This otp is used" });
-      }
-      await updateDocument(
-        "user",
-        { telephone },
-        {
-          password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
-        }
-      );
-      await check_telephone.updateOne({ used: true });
-      return res
-        .status(200)
-        .send({ status: 200, message: "Password updated successfully" });
+      return res.status(200).send({ status: 200, message: "OTP confirmed" });
     }
 
     // check_email.otp_key;
@@ -85,4 +65,4 @@ const checkPassword = async (req, res) => {
   }
 };
 
-module.exports = checkPassword;
+module.exports = confirmOtp;

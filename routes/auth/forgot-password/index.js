@@ -54,6 +54,7 @@ const forgetPassword = async (req, res) => {
       );
       res.status(200).send({ status: 200, message: "Otp send successfully" });
     }
+    // Telephone
     if (telephone) {
       // Twilio verification
       const client = require("twilio")(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
