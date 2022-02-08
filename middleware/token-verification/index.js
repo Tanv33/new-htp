@@ -14,11 +14,6 @@ const tokenVerification = (req, res, next) => {
         .status(400)
         .send({ status: 400, message: "Token Unauthorized!" });
     }
-    if (!decoded.user._id) {
-      return res
-        .status(401)
-        .send({ status: 400, message: "Kaha na kai user ka new token generate karoo" });
-    }
     const isUserExist = await findOne("user", { _id: decoded.user._id });
     if (!isUserExist) {
       return res

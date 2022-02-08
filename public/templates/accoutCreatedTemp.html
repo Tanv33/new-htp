@@ -102,27 +102,12 @@
             height: 28vh;
             padding-right: 0px;
             padding-left: 0px;
-            position: relative !important;
-        }
-        
-        .first_img {
-            outline: none;
-            text-decoration: none;
-            -ms-interpolation-mode: bicubic;
-            clear: both;
-            border: none;
-            height: auto;
-            float: none;
-            width: 100%;
-            max-width: 600px;
-        }
-        
+        }           
         .second_img {
             height: 50% !important;
             width: 40% !important;
-            position: absolute !important;
-            left: 10px !important;
-            top: 60px !important;
+            margin-top: 70px;
+            margin-left: 20px;
         }
         /* .firstBg{
             background-image: url("");
@@ -161,14 +146,8 @@
                                                         <td style="overflow-wrap:break-word;word-break:break-word;padding:0px;font-family:helvetica,sans-serif;" align="left">
                                                             <table width="100%" cellpadding="0" cellspacing="0" border="0">
                                                                 <tr>
-                                                                    <td class="imgParent" align="center">
-                                                                        <!-- <img align="center" border="0"
-                                                                        class="first_img"
-                                                                            src="https://www.dropbox.com/s/gv8v5zr4xt7ceb9/Email-banner.png?raw=1"
-                                                                            alt="" title=""
-                                                                            width="600" /> -->
+                                                                    <td class="imgParent" >
                                                                         <img class="second_img" src={{manager_logo}} alt="manager">
-
                                                                     </td>
                                                                 </tr>
                                                             </table>
@@ -333,11 +312,10 @@
                                                                         you have any further questions feel free to
                                                                         reach us at:</span></p>
                                                                 <p style="font-size: 14px; line-height: 140%; text-align: center;">
-                                                                    <span style="font-size: 16px; line-height: 22.4px;">+1
-                                                                        (626) 813-3800&nbsp; | &nbsp;<a
-                                                                            href="https://Support@udl.com"
+                                                                    <span style="font-size: 16px; line-height: 22.4px;">{{telephone}}&nbsp; | &nbsp;<a
+                                                                            href="mailto:{{email}}"
                                                                             target="_blank"
-                                                                            rel="noopener">Support@udl.com</a></span>
+                                                                            rel="noopener">{{email}}</a></span>
                                                                 </p>
                                                             </div>
 
@@ -381,18 +359,13 @@
                                                                     &nbsp;</p>
                                                                 <p style="font-size: 14px; line-height: 140%; text-align: center;">
                                                                     <strong><span
-                                                                            style="font-size: 16px; line-height: 22.4px;">14411
-                                                                            Palmrose St.,Baldwin Park, CA 91706
+                                                                            style="font-size: 16px; line-height: 22.4px;">{{lab_address}}
                                                                         </span></strong></p>
                                                                 <p style="font-size: 14px; line-height: 140%; text-align: center;">
                                                                     <strong><span
-                                                                            style="font-size: 16px; line-height: 22.4px;">Tel:
-                                                                            (626) 813 - 3800 | Fax: (626) 337 -2037
-                                                                        </span></strong></p>
-                                                                <p style="font-size: 14px; line-height: 140%; text-align: center;">
-                                                                    <strong><span
-                                                                            style="font-size: 16px; line-height: 22.4px;">Dir:
-                                                                            Andrew C. Burg, M.D.</span></strong></p>
+                                                                            style="font-size: 16px; line-height: 22.4px;text-align:center">Tel:
+                                                                          {{telephone}} </span></strong></p>
+                                                              
                                                             </div>
 
                                                         </td>

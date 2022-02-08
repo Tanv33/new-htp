@@ -6,7 +6,7 @@ const approveManager = async (req, res) => {
     const getSingleManager = await findOne("user", { _id: req.params.id });
     let newStatus = "";
     if (getSingleManager.status === "Active") {
-      newStatus = "Pending";
+      newStatus = "Disabled";
     } else {
       newStatus = "Active";
     }
@@ -16,11 +16,17 @@ const approveManager = async (req, res) => {
       send_email(
         res,
         "employeeApprovedTemp",
-        { username: user.full_name, manager_logo: user.manager_logo },
-        "American Specialty Lab",
+        {
+          username: user.full_name,
+          manager_logo: user.manager_logo,
+          email: user.email,
+          telephone: user.telephone,
+          lab_address: user.lab_address,
+        },
+        "Health Titan Pro",
         "Account Approved Successfully",
         user.email
-      );
+      )
     }
     return res.status(200).send({ status: 200, manager: user });
   } catch (e) {

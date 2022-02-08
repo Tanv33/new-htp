@@ -20,8 +20,14 @@ const approveEmployee = async (req, res) => {
       send_email(
         res,
         "employeeApprovedTemp",
-        { username: user.first_name, manager_logo: manager.manager_logo },
-        "American Specialty Lab",
+        {
+          username: user.first_name,
+          manager_logo: manager.manager_logo,
+          email: manager.email,
+          telephone: manager.telephone,
+          lab_address: manager.lab_address,
+        },
+        "Heralth Titan Pro",
         "Account Approved Successfully",
         user.email
       );

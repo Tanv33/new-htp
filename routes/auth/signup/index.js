@@ -6,6 +6,8 @@ const {
   find,
   searchDocuments,
   getDropBoxLink,
+  _base64ToArrayBuffer,
+  generateRandomNumber,
 } = require("../../../helpers");
 const bcrypt = require("bcryptjs");
 const fs = require("fs");
@@ -18,6 +20,7 @@ const managerSchema = Joi.object({
   telephone: Joi.string().min(17).required(),
   lab_name: Joi.string().required(),
   lab_address: Joi.string().required(),
+  manager_signature: Joi.string().required(),
   type: Joi.string().required(),
   password: Joi.string()
     .min(6)
@@ -65,6 +68,7 @@ const signUpUser = async (req, res) => {
     date_of_birth,
     employee_location,
     address,
+    manager_signature,
     city,
     state,
     zip_code,
@@ -99,8 +103,15 @@ const signUpUser = async (req, res) => {
     }
     // For Manager
     if (type === "Manager") {
-      console.log(req.files);
-      console.log(req.body);
+      // check string is of base64 or not
+      const base64regex =
+        /^data:image\/[a-z]+;base64,([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
+      if (!base64regex.test(manager_signature)) {
+        return res.status(400).send({
+          status: 400,
+          message: "Manager Signature should be in base64",
+        });
+      }
 
       let imageType = ["image/png", "image/jpeg", "image/jpg", "image/gif"];
       if (!req.files.manager_logo) {
@@ -114,20 +125,6 @@ const signUpUser = async (req, res) => {
           return res.status(400).send({
             status: 400,
             message: "Manager logo should be an image",
-          });
-        }
-      }
-      if (!req.files.manager_signature) {
-        return res.status(400).send({
-          status: 400,
-          message: "Manager Signature Required",
-        });
-      }
-      if (req.files) {
-        if (!imageType.includes(req.files.manager_signature[0].mimetype)) {
-          return res.status(400).send({
-            status: 400,
-            message: "Manager Signature should be an image",
           });
         }
       }
@@ -155,12 +152,17 @@ const signUpUser = async (req, res) => {
         "/managerlogos/" + mid + "-" + req.files.manager_logo[0].filename,
         req.files.manager_logo[0].path
       );
+
       req.body.manager_signature = await getDropBoxLink(
         "/manager signature/" +
           mid +
           "-" +
-          req.files.manager_signature[0].filename,
-        req.files.manager_signature[0].path
+          generateRandomNumber(11111, 99999) +
+          ".png",
+        _base64ToArrayBuffer(
+          manager_signature.replace(/^data:image\/[a-z]+;base64,/, "")
+        ),
+        true
       );
       const new_user = await insertNewDocument("user", {
         full_name,
@@ -178,13 +180,18 @@ const signUpUser = async (req, res) => {
       send_email(
         res,
         "accoutCreatedTemp",
-        { username: full_name, manager_logo: req.body.manager_logo },
-        "American Specialty Lab",
+        {
+          username: full_name,
+          manager_logo: req.body.manager_logo,
+          email: email,
+          telephone: telephone,
+          lab_address: lab_address,
+        },
+        "Health Titan Pro",
         "Account Created",
         email
       );
       fs.unlinkSync(req.files.manager_logo[0].path);
-      fs.unlinkSync(req.files.manager_signature[0].path);
       return res.status(200).send({ status: 200, user: new_user });
     }
     // For Employees
@@ -239,8 +246,14 @@ const signUpUser = async (req, res) => {
       send_email(
         res,
         "accoutCreatedTemp",
-        { username: first_name, manager_logo: populatedUser[0].manager_logo },
-        "American Specialty Lab",
+        {
+          username: first_name,
+          manager_logo: populatedUser[0].manager_logo,
+          email: populatedUser[0].email,
+          telephone: populatedUser[0].telephone,
+          lab_address: populatedUser[0].lab_address,
+        },
+        "Health Titan Pro",
         "Account Created",
         email
       );
@@ -253,9 +266,6 @@ const signUpUser = async (req, res) => {
     }
   } catch (e) {
     console.log(e);
-    if (req?.file?.path) {
-      fs.unlinkSync(req.file.path);
-    }
     return res.status(400).send({ status: 400, message: e.message });
   }
 };

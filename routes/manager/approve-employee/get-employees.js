@@ -1,8 +1,4 @@
-const {
-  searchDocuments,
-  findOne,
-  getPopulatedData,
-} = require("../../../helpers");
+const { findOne, getPopulatedData } = require("../../../helpers");
 
 const getEmployees = async (req, res) => {
   try {
@@ -13,8 +9,7 @@ const getEmployees = async (req, res) => {
         mid: manager.mid,
         _id: { $ne: req.userId },
       },
-      "type employee_location",
-      
+      "type employee_location"
     );
     return res.status(200).send({ status: 200, employeeArray });
   } catch (e) {

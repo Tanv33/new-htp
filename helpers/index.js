@@ -2,6 +2,7 @@ const Models = require("../models");
 const QRCode = require("qrcode");
 const { dbx } = require("../lib");
 const fs = require("fs");
+var atob = require("atob");
 
 const find = async (modelDb, queryObj) =>
   await Models[modelDb].find(queryObj).exec();
@@ -67,10 +68,17 @@ const helperFunctionForQrCode = async (pid) => {
   // });
 };
 
-const getDropBoxLink = async (dropBoxPath, filePath) => {
+// Dropbox
+const getDropBoxLink = async (dropBoxPath, filePath, arrayBuffer) => {
+  var newPath;
+  if (arrayBuffer) {
+    newPath = filePath;
+  } else {
+    newPath = fs.readFileSync(filePath);
+  }
   const fileUpload = await dbx.filesUpload({
     path: dropBoxPath,
-    contents: fs.readFileSync(filePath),
+    contents: newPath,
   });
   const sharedLink = await dbx.sharingCreateSharedLinkWithSettings({
     path: fileUpload.result.path_display,
@@ -82,6 +90,17 @@ const getDropBoxLink = async (dropBoxPath, filePath) => {
   });
   return sharedLink.result.url?.replace(/dl=0$/, "raw=1");
 };
+
+// Base64 To array Buffer
+function _base64ToArrayBuffer(base64) {
+  var binary_string = atob(base64);
+  var len = binary_string.length;
+  var bytes = new Uint8Array(len);
+  for (var i = 0; i < len; i++) {
+    bytes[i] = binary_string.charCodeAt(i);
+  }
+  return bytes.buffer;
+}
 
 const generateRandomNumber = (min, max) => Math.random() * (max - min) + min;
 
@@ -101,4 +120,5 @@ module.exports = {
   getDropBoxLink,
   generateRandomNumber,
   getFindSelectPopulateData,
+  _base64ToArrayBuffer,
 };
