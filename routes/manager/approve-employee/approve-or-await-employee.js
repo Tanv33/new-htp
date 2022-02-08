@@ -24,12 +24,12 @@ const approveEmployee = async (req, res) => {
           telephone: manager.telephone,
           lab_address: manager.lab_address,
         },
-        "Heralth Titan Pro",
+        "Health Titan Pro",
         "Account Approved Successfully",
         employee.email
       );
     }else{
-      
+
     }
     return res.status(200).send({ status: 200, employee: employeeUpdate });
   } catch (e) {
