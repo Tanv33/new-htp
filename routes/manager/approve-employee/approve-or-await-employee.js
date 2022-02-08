@@ -1,27 +1,24 @@
 const { updateDocument, findOne } = require("../../../helpers");
-const Joi = require("joi");
 const { send_email } = require("../../../lib");
 
-// const schema = Joi.object({
-//   status: Joi.string().required(),
-// });
 const approveEmployee = async (req, res) => {
   try {
-    // await schema.validateAsync(req.body);
-    // const { status } = req.body;
+    let newStatus = "";
     const manager = await findOne("user", { _id: req.userId });
-    const employee = await updateDocument(
-      "user",
-      { _id: req.params.id },
-      { status: "Active" }
-    );
-    const user = await findOne("user", { _id: req.params.id });
-    if (user.status === "Active") {
+    const employee = await findOne("user", { _id: req.params.id });
+    if (employee.status === "Active") {
+      newStatus = "Disabled";
+    } else {
+      newStatus = "Active";
+    }
+    await updateDocument("user", { _id: req.params.id }, { status: newStatus });
+    const employeeUpdate = await findOne("user", { _id: req.params.id });
+    if (employeeUpdate.status === "Active") {
       send_email(
         res,
         "employeeApprovedTemp",
         {
-          username: user.first_name,
+          username: employee.first_name,
           manager_logo: manager.manager_logo,
           email: manager.email,
           telephone: manager.telephone,
@@ -29,10 +26,12 @@ const approveEmployee = async (req, res) => {
         },
         "Heralth Titan Pro",
         "Account Approved Successfully",
-        user.email
+        employee.email
       );
+    }else{
+      
     }
-    return res.status(200).send({ status: 200, employee });
+    return res.status(200).send({ status: 200, employee: employeeUpdate });
   } catch (e) {
     res.status(400).send({ status: 400, message: e.message });
   }
