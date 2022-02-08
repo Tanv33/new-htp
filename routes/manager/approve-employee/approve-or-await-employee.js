@@ -29,6 +29,20 @@ const approveEmployee = async (req, res) => {
         employee.email
       );
     }else{
+      send_email(
+        res,
+        "userDisabled",
+        {
+          username: employee.first_name,
+          manager_logo: manager.manager_logo,
+          email: manager.email,
+          telephone: manager.telephone,
+          lab_address: manager.lab_address,
+        },
+        "Health Titan Pro",
+        "Account Disabled",
+        employee.email
+      );
 
     }
     return res.status(200).send({ status: 200, employee: employeeUpdate });

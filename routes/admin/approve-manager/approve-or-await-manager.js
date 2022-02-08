@@ -26,7 +26,22 @@ const approveManager = async (req, res) => {
         "Health Titan Pro",
         "Account Approved Successfully",
         user.email
-      )
+      );
+    } else {
+      send_email(
+        res,
+        "userDisabled",
+        {
+          username: user.full_name,
+          manager_logo: user.manager_logo,
+          email: user.email,
+          telephone: user.telephone,
+          lab_address: user.lab_address,
+        },
+        "Health Titan Pro",
+        "Account Disabled",
+        user.email
+      );
     }
     return res.status(200).send({ status: 200, manager: user });
   } catch (e) {
