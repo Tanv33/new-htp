@@ -71,6 +71,7 @@ const signUpUser = async (req, res) => {
     location,
   } = req.body;
   try {
+    console.log(req.body);
     // For Asins
     if (type === "Asins") {
       await adminSchema.validateAsync(req.body);
