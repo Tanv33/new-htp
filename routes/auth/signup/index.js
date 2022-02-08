@@ -71,7 +71,6 @@ const signUpUser = async (req, res) => {
     location,
   } = req.body;
   try {
-    console.log(req.body);
     // For Asins
     if (type === "Asins") {
       await adminSchema.validateAsync(req.body);
@@ -101,6 +100,8 @@ const signUpUser = async (req, res) => {
     // For Manager
     if (type === "Manager") {
       console.log(req.files);
+      console.log(req.body);
+
       let imageType = ["image/png", "image/jpeg", "image/jpg", "image/gif"];
       if (!req.files.manager_logo) {
         return res.status(400).send({
