@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const { findOneSort, updateDocument } = require("../../../helpers");
 
 const schema = Joi.object({
-  otp_key: Joi.string().required(),
+  otp_key: Joi.string().min(6).required(),
   password: Joi.string().required(),
   confirm_password: Joi.string().required().valid(Joi.ref("password")),
   preferred_method: Joi.string().required().valid("Email", "Telephone"),

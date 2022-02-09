@@ -11,7 +11,7 @@ const schema = Joi.object({
     is: "Telephone",
     then: Joi.required(),
   }),
-  otp_key: Joi.string().required(),
+  otp_key: Joi.string().min(6).required(),
 });
 
 const confirmOtp = async (req, res) => {

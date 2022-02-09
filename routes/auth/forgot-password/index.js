@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const nodemailer = require("nodemailer");
 const {
   insertNewDocument,
   findOne,
@@ -39,7 +38,7 @@ const forgetPassword = async (req, res) => {
         name = check_email.full_name;
       }
       // Function for creating OTP key
-      const otp_key = generateRandomNumber(11111, 99999).toFixed(0);
+      const otp_key = generateRandomNumber(111111, 999999).toFixed(0);
       await insertNewDocument("otp", {
         otp_key: bcrypt.hashSync(otp_key, bcrypt.genSaltSync(10)),
         email,
@@ -48,7 +47,7 @@ const forgetPassword = async (req, res) => {
         res,
         "forgotPassword",
         { username: name, OTP: otp_key },
-        "American Specialty Lab",
+        "Health Titan Pro",
         "Verification Key",
         email
       );
@@ -65,7 +64,7 @@ const forgetPassword = async (req, res) => {
           .send({ status: 400, message: "Number not exist" });
       }
       // Function for creating OTP key
-      const otp_key = generateRandomNumber(11111, 99999).toFixed(0);
+      const otp_key = generateRandomNumber(111111, 999999).toFixed(0);
       await insertNewDocument("otp", {
         otp_key: bcrypt.hashSync(otp_key, bcrypt.genSaltSync(10)),
         telephone,
