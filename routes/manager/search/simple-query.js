@@ -125,31 +125,8 @@ const simpleQuery = async (req, res) => {
       );
       return res.status(200).send({ status: 200, employees });
     }
-    if (status === "Active") {
-      employees = await getPopulatedData(
-        "user",
-        {
-          mid: manager.mid,
-          _id: { $ne: req.userId },
-          status: { $regex: status, $options: "i" },
-        },
-        "type employee_location"
-      );
-      return res.status(200).send({ status: 200, employees });
-    }
-    if (status === "Pending") {
-      employees = await getPopulatedData(
-        "user",
-        {
-          mid: manager.mid,
-          _id: { $ne: req.userId },
-          status: { $regex: status, $options: "i" },
-        },
-        "type employee_location"
-      );
-      return res.status(200).send({ status: 200, employees });
-    }
-    if (status === "Disabled") {
+    let statusArray = ["Active", "Disabled", "Pending"];
+    if (statusArray.includes(status)) {
       employees = await getPopulatedData(
         "user",
         {
