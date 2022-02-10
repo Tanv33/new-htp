@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const getEmployeesByLabName = require("./search-by-lab-name");
+const simpleQuery = require("./simple-query");
 
-router.get("/employee-by-lab-name", getEmployeesByLabName);
+router.get("/simple-query", simpleQuery);
 
 module.exports = router;
