@@ -1,4 +1,4 @@
-const consentForm = (signature,obj) => {
+const consentForm = (signature, obj) => {
   return `<!DOCTYPE HTML
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
@@ -185,10 +185,22 @@ const consentForm = (signature,obj) => {
                               <div
                                 style="color: #2f3440; line-height: 160%;padding: 10px; text-align: justify; word-wrap: break-word;">
                                 <p style="font-size: 14px; line-height: 110%;line-height: 30px;">
-                                  I ${obj.fullname}, Authorization and Consent for Covid-19 Diagnostic Testing: I voluntarily consent and authorize (${obj.loactionName}) to conduct collection of my COVID-19 sample. I authorize and consent (${obj.loactionName}) to send my sample for testing, and analysis for the purposes of a COVID-19 diagnostic test to American Specialty Lab.
-                                  ${obj.productionName ? "<br />I voluntarily consent and authorize (American Specialty Lab) to release my results to my employer/production company.": ""}
+                                  I ${
+                                    obj.fullname
+                                  }, Authorization and Consent for Covid-19 Diagnostic Testing: I voluntarily consent and authorize (${
+    obj.loactionName
+  }) to conduct collection of my COVID-19 sample. I authorize and consent (${
+    obj.loactionName
+  }) to send my sample for testing, and analysis for the purposes of a COVID-19 diagnostic test to American Specialty Lab.
+                                  ${
+                                    obj.productionName
+                                      ? "<br />I voluntarily consent and authorize (American Specialty Lab) to release my results to my employer/production company."
+                                      : ""
+                                  }
                                   <br />
-                                  I acknowledge and understand that my COVID-19 diagnostic test will require the collection or an appropriate sample by (${obj.loactionName}) through a nasopharyngeal swab, oral swab, or other recommended collection procedures.<br /> I understand that there are risks and benefits associated with undergoing a diagnostic test for COVID-19 and there may be a potential for false positive or raise negative test results. I assume complete and full responsibility to take appropriate action with regards to my test results. Should I have questions or concerns regarding my results, or a worsening of my condition, I shall promptly seek advice and treatment from an appropriate medical provider.                   
+                                  I acknowledge and understand that my COVID-19 diagnostic test will require the collection or an appropriate sample by (${
+                                    obj.loactionName
+                                  }) through a nasopharyngeal swab, oral swab, or other recommended collection procedures.<br /> I understand that there are risks and benefits associated with undergoing a diagnostic test for COVID-19 and there may be a potential for false positive or raise negative test results. I assume complete and full responsibility to take appropriate action with regards to my test results. Should I have questions or concerns regarding my results, or a worsening of my condition, I shall promptly seek advice and treatment from an appropriate medical provider.                   
                               </div>
 
                             </td>
@@ -221,9 +233,7 @@ const consentForm = (signature,obj) => {
 
                                 <div
                                   Style="width: 100%; height: 200px; border-radius: 13px; border: 1px solid #C3C3C7;">
-                                  <img src="data:image/png;base64,${signature?.toString(
-                                    'base64'
-                                  )}" width="100%" height="100%" />
+                                  <img src="${signature}" width="100%" height="100%" />
                                 </div>
 
                               </div>

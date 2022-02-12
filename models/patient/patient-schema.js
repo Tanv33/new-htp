@@ -5,24 +5,24 @@ const patientSchema = new mongoose.Schema(
   {
     first_name: {
       type: schemaType.TypeString,
-      required: true,
+      // required: true,
     },
     last_name: {
       type: schemaType.TypeString,
-      required: true,
+      // required: true,
     },
     full_name: {
       type: schemaType.TypeString,
-      required: true,
+      // required: true,
     },
     email: {
       type: schemaType.TypeString,
       // unique: true,
-      required: true,
+      // required: true,
     },
     delivery_method: {
       type: schemaType.TypeArray,
-      //   required: true,
+        // required: true,
     },
     is_tested: {
       type: schemaType.TypeString,
@@ -35,36 +35,36 @@ const patientSchema = new mongoose.Schema(
     telephone: {
       type: schemaType.TypeString,
       // unique: true,
-      required: true,
+      // required: true,
     },
     address: {
       type: schemaType.TypeString,
-      required: true,
+      // required: true,
     },
     city: {
       type: schemaType.TypeString,
-      required: true,
+      // required: true,
     },
     state: {
       type: schemaType.TypeString,
-      required: true,
+      // required: true,
     },
     zip_code: {
       type: schemaType.TypeString,
-      required: true,
+      // required: true,
     },
     date_of_birth: {
       type: schemaType.TypeDate,
-      required: true,
+      // required: true,
     },
     age: {
       type: schemaType.TypeNumber,
-      required: true,
+      // required: true,
     },
     created_by: {
       type: schemaType.ObjectID,
       ref: "user",
-      requried: true,
+      // requried: true,
     },
     location: {
       type: schemaType.ObjectID,
@@ -87,25 +87,25 @@ const patientSchema = new mongoose.Schema(
     },
     doc_prescription_url: {
       type: schemaType.TypeString,
-      //   required: true,
+        // required: true,
     },
     test_type: {
       type: schemaType.ObjectID,
       ref: "test-types",
-      required: true,
+      // required: true,
     },
     pid: {
       type: schemaType.TypeNumber,
       unique: true,
-      required: true,
+      // required: true,
     },
     pid_link: {
       type: schemaType.TypeString,
-      required: true,
+      // required: true,
     },
     sex: {
       type: schemaType.TypeString,
-      required: true,
+      // required: true,
     },
     passport: {
       type: schemaType.TypeBoolean,
@@ -144,11 +144,11 @@ const patientSchema = new mongoose.Schema(
     tested_by: {
       type: schemaType.ObjectID,
       ref: "user",
-      required: true,
+      // required: true,
     },
     tested_date: {
       type: schemaType.TypeDate,
-      required: true,
+      // required: true,
     },
   },
   { timestamps: true }

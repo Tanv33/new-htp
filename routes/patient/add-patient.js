@@ -5,6 +5,8 @@ const {
   findOne,
   helperFunctionForQrCode,
   getPopulatedData,
+  getDropBoxLink,
+  _base64ToArrayBuffer,
 } = require("../../helpers");
 const { send_email, dbx } = require("../../lib");
 const { NumberGeneratorModel } = require("../../models");
@@ -15,6 +17,7 @@ const consentHtml = require("../../public/pdf/tetindConsent");
 
 const addPatient = async (req, res) => {
   try {
+    let patientSignature;
     // searching mp by id and after that getting all user with same mid and searching manager. If manager found then check reuired fileds if it's exist so required it in joi and if there is no lab created so return text with "No Lab created"
     const medicalProfession = await getPopulatedData(
       "user",
@@ -50,53 +53,81 @@ const addPatient = async (req, res) => {
         .status(404)
         .send({ status: 404, message: "Tested User not exist!" });
     }
+
     // See Down PDF stuff
     // Signature
+    if (!req.body.signature) {
+      return res
+        .status(400)
+        .send({ status: 400, message: "Patient Signature is required" });
+    }
+    const base64regex =
+      /^data:image\/[a-z]+;base64,([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
+    if (!base64regex.test(req.body.signature)) {
+      return res.status(400).send({
+        status: 400,
+        message: "Manager Signature should be in base64",
+      });
+    }
     function randomNumberGenerator(min, max) {
       return Math.random() * (max - min) + min;
     }
-    let getSignatureImage = fs.readFileSync(
-      req.files.signature[0].path,
-      (err, data) => {
-        if (err) {
-          return res
-            .status(400)
-            .send({ status: 400, message: "Error in reading Signature File" });
-        }
-        getSignatureImage = data;
-      }
+    patientSignature = await getDropBoxLink(
+      "/patient signature/" +
+        `patient-signature-${randomNumberGenerator(11111, 99999).toFixed(
+          0
+        )}.png`,
+      _base64ToArrayBuffer(
+        req.body.signature.replace(/^data:image\/[a-z]+;base64,/, "")
+      ),
+      true
     );
+    // let getSignatureImage = fs.readFileSync(
+    //   req.files.signature[0].path,
+    //   (err, data) => {
+    //     if (err) {
+    //       return res
+    //         .status(400)
+    //         .send({ status: 400, message: "Error in reading Signature File" });
+    //     }
+    //     getSignatureImage = data;
+    //   }
+    // );
     // uploading patient signature
-    const patientSignature = await dbx.filesUpload({
-      path:
-        "/patient signature/" +
-        `patient-signature-${randomNumberGenerator(11111, 99999).toFixed(0)}.png`,
-      contents: fs.readFileSync(`./public/patient signature/${pid}.png`),  });
-    if (!patientSignature) {
-      return res
-        .status(400)
-        .send({ status: 400, message: "Error in uploading Patient Signature Image" });
-    }
-    const patientSignatureUrl = await dbx.sharingCreateSharedLinkWithSettings({
-      path: patientSignature.result.path_display,
-      settings: {
-        requested_visibility: "public",
-        audience: "public",
-        access: "viewer",
-      },
-    });
-    if (!patientSignatureUrl) {
-      return res.status(400).send({
-        status: 400,
-        message: "Error in getting shared link of Signature Image",
-      });
-    }
+    // const patientSignature = await dbx.filesUpload({
+    //   path:
+    //     "/patient signature/" +
+    //     `patient-signature-${randomNumberGenerator(11111, 99999).toFixed(
+    //       0
+    //     )}.png`,
+    //   contents: fs.readFileSync(`./public/patient signature/${pid}.png`),
+    // });
+    // if (!patientSignature) {
+    //   return res.status(400).send({
+    //     status: 400,
+    //     message: "Error in uploading Patient Signature Image",
+    //   });
+    // }
+    // const patientSignatureUrl = await dbx.sharingCreateSharedLinkWithSettings({
+    //   path: patientSignature.result.path_display,
+    //   settings: {
+    //     requested_visibility: "public",
+    //     audience: "public",
+    //     access: "viewer",
+    //   },
+    // });
+    // if (!patientSignatureUrl) {
+    //   return res.status(400).send({
+    //     status: 400,
+    //     message: "Error in getting shared link of Signature Image",
+    //   });
+    // }
 
     // console.log(getSignatureImage);  // Buffer
     const getSignaturePdf = async () => {
       return new Promise((resolve, reject) => {
         pdf
-          .create(signatureHtml(getSignatureImage, req.body), {
+          .create(signatureHtml(req.body.signature, req.body), {
             format: "Letter",
           })
           .toFile(
@@ -149,7 +180,7 @@ const addPatient = async (req, res) => {
     const getConsentPdf = async () => {
       return new Promise((resolve, reject) => {
         pdf
-          .create(consentHtml(getSignatureImage, req.body), {
+          .create(consentHtml(req.body.signature, req.body), {
             format: "Letter",
           })
           .toFile(
@@ -245,10 +276,11 @@ const addPatient = async (req, res) => {
         .status(400)
         .send({ status: 400, message: "Error in getting shared link" });
     }
-    req.body.patient_signature = patientSignatureUrl.result.url?.replace(
-      /dl=0$/,
-      "raw=1"
-    );
+    req.body.patient_signature = patientSignature;
+    //  patientSignatureUrl.result.url?.replace(
+    //   /dl=0$/,
+    //   "raw=1"
+    // );
     req.body.signature = signatureSharedLink.result.url?.replace(
       /dl=0$/,
       "raw=1"

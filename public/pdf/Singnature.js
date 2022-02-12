@@ -358,9 +358,7 @@ const signaturePdf = (signature, data, qrCodeData) => {
               justify-content: center;
               align-items: center;
             ">
-                  <img src="data:image/png;base64,${signature?.toString(
-                    "base64"
-                  )}" width="100%" height="100%" />
+                  <img src="${signature}" width="100%" height="100%" />
               </div>
           </td>
       </tr>
