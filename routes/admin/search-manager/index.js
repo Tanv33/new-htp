@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const simpleQuery = require("./simple-query");
+const query = require("./query");
 
-router.get("/simple-query", simpleQuery);
+router.get("/query", query);
 
 module.exports = router;

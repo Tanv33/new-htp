@@ -1,6 +1,6 @@
 const { getPopulatedData, findOne, find } = require("../../../helpers");
 
-const simpleQuery = async (req, res) => {
+const query = async (req, res) => {
   try {
     const {
       first_name,
@@ -147,7 +147,7 @@ const simpleQuery = async (req, res) => {
     } else {
       return res
         .status(400)
-        .send({ status: 400, message: "Wrong key to search" });
+        .send({ status: 400, message: "Wrong key or value search" });
     }
   } catch (e) {
     console.log(e);
@@ -155,4 +155,4 @@ const simpleQuery = async (req, res) => {
   }
 };
 
-module.exports = simpleQuery;
+module.exports = query;
