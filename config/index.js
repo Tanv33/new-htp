@@ -12,4 +12,5 @@ module.exports = {
   MAIL_PASS: process.env.MAIL_PASS,
   TWILIO_ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID,
   TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN,
+  ACCESS_TOKEN: process.env.ACCESS_TOKEN,
 };
