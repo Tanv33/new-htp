@@ -14,6 +14,11 @@ const tokenVerification = (req, res, next) => {
         .status(400)
         .send({ status: 400, message: "Token Unauthorized!" });
     }
+    if (!decoded.user) {
+      return res
+        .status(400)
+        .send({ status: 400, message: "Upgrade your token" });
+    }
     const isUserExist = await findOne("user", { _id: decoded.user._id });
     if (!isUserExist) {
       return res
