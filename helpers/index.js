@@ -3,11 +3,14 @@ const QRCode = require("qrcode");
 const { dbx } = require("../lib");
 const fs = require("fs");
 var atob = require("atob");
+var pdf = require("html-pdf");
 
 const find = async (modelDb, queryObj) =>
   await Models[modelDb].find(queryObj).exec();
 const findOne = async (modelDb, queryObj) =>
   await Models[modelDb].findOne(queryObj).exec();
+const findOneAndUpdate = async (modelDb, findObj, update, option) =>
+  await Models[modelDb].findOneAndUpdate(findObj, update, option).exec();
 const searchDocuments = async (modelDb, queryObj) =>
   await Models[modelDb].find(queryObj).exec();
 const updateDocument = async (modelDb, updateQuery, setQuery) => {
@@ -102,7 +105,49 @@ function _base64ToArrayBuffer(base64) {
   return bytes.buffer;
 }
 
+// Pdf Generator
+const generatePdf = async (htmlFilePath, localDirectoryLocation) => {
+  return new Promise((resolve, reject) => {
+    pdf
+      .create(htmlFilePath, {
+        format: "Letter",
+      })
+      .toFile(localDirectoryLocation, (err, data) => {
+        if (err) {
+          // return res
+          //   .status(400)
+          //   .send({ status: 400, message: "Error in Generating PDF" });
+          reject("error");
+        }
+        // console.log(data);
+        resolve(data);
+      });
+  });
+};
+
+// Generate Random Number
 const generateRandomNumber = (min, max) => Math.random() * (max - min) + min;
+
+// check string is base64 or not
+const base64regex =
+  /^data:image\/[a-z]+;base64,([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
+
+// DateFormat
+const dateFormat = () => {
+  let date = new Date();
+  let month = date.getMonth() + 1;
+  if (month < 10) {
+    month = `0${month}`;
+  }
+  let day = date.getDate();
+  if (day < 10) {
+    day = `0${day}`;
+  }
+
+  //	date.setDate(date.getDate()+adds)
+  return `${date.getFullYear()}${month}${day}`;
+  //	return Math.ceil(date.getTime()/1000)
+};
 
 module.exports = {
   getPopulated,
@@ -121,4 +166,8 @@ module.exports = {
   generateRandomNumber,
   getFindSelectPopulateData,
   _base64ToArrayBuffer,
+  generatePdf,
+  base64regex,
+  dateFormat,
+  findOneAndUpdate,
 };
