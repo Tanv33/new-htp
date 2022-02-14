@@ -9,7 +9,7 @@ const schema = Joi.object({
   address: Joi.string().required(),
   zip_code: Joi.string().required(),
   test: Joi.array().required(),
-  patient_required_fields: Joi.array().required(),
+  patient_required_fields: Joi.object().required(),
 });
 
 const createLocation = async (req, res) => {

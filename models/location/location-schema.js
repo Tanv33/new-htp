@@ -5,35 +5,35 @@ const locationSchema = new mongoose.Schema(
   {
     location_name: {
       type: schemaType.TypeString,
-      required: true,
+      // required: true,
     },
     email: {
       type: schemaType.TypeString,
-      required: true,
+      // required: true,
     },
     city: {
       type: schemaType.TypeString,
-      required: true,
+      // required: true,
     },
     state: {
       type: schemaType.TypeString,
-      required: true,
+      // required: true,
     },
     address: {
       type: schemaType.TypeString,
-      required: true,
+      // required: true,
     },
     zip_code: {
       type: schemaType.TypeString,
-      required: true,
+      // required: true,
     },
     test: {
       type: schemaType.TypeArray,
-      required: true,
+      // required: true,
     },
     patient_required_fields: {
-      type: schemaType.TypeArray,
-      required: true,
+      type: Object,
+      // required: true,
     },
     production: {
       type: schemaType.TypeString,

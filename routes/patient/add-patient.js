@@ -33,11 +33,18 @@ const addPatient = async (req, res) => {
     const { patient_required_fields } = employee_location;
     // creating an empty object and looping values from manager required fields and inserting keys which are required values and keys values are Joi.required()
     let obj = {};
-    patient_required_fields.map((field) => {
-      obj[field] = Joi.required();
-    });
-    console.log(obj);
-    console.log({ patient_required_fields });
+    // console.log({ patient_required_fields });
+    // patient_required_fields.map((field) => {
+    //   obj[field] = Joi.required();
+    // });
+    for (const key in patient_required_fields) {
+      // console.log(key.required);
+      if (patient_required_fields[key].required) {
+        obj[key] = Joi.required();
+      }
+    }
+    obj.patient_signature = Joi.required();
+    // console.log(obj);
     const schema = Joi.object(obj);
     await schema.validateAsync(req.body);
     // After validation
