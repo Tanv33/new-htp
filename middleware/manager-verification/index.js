@@ -1,19 +1,24 @@
 const { getPopulatedData } = require("../../helpers");
 
 const managerVerification = async (req, res, next) => {
-  const is_manager_user = await getPopulatedData(
-    "user",
-    { _id: req.userId },
-    "type",
-    "type"
-  );
-  if (is_manager_user[0].type.type !== "Manager") {
-    return res.status(400).send({
-      status: 400,
-      message: "Manager can only Approve Employee",
-    });
+  try {
+    const is_manager_user = await getPopulatedData(
+      "user",
+      { _id: req.userId },
+      "type",
+      "type"
+    );
+    if (is_manager_user[0].type.type !== "Manager") {
+      return res.status(400).send({
+        status: 400,
+        message: "Manager can only Approve Employee",
+      });
+    }
+    next();
+  } catch (e) {
+    console.log("Manager token verification Error", e.message);
+    return res.status(400).send({ status: 400, message: e.message });
   }
-  next();
 };
 
 module.exports = { managerVerification: managerVerification };
