@@ -1,20 +1,46 @@
-const { insertNewDocument, pushIfNotExists } = require("../../../helpers");
+const {
+  insertNewDocument,
+  pushIfNotExists,
+  getDropBoxLink,
+  generateRandomNumber,
+  findOne,
+} = require("../../../helpers");
 const Joi = require("joi");
+const fs = require("fs");
 
 const schema = Joi.object({
   location_name: Joi.string().required(),
   email: Joi.string().email().required(),
-  city: Joi.string().required(),
-  state: Joi.string().required(),
-  address: Joi.string().required(),
   zip_code: Joi.string().required(),
+  address: Joi.string().required(),
+  city: Joi.string().required(),
+  // state: Joi.string().required(),
   test: Joi.array().required(),
-  patient_required_fields: Joi.object().required(),
+  location_logo: Joi.string(),
+  patient_required_fields: Joi.array().required(),
 });
 
 const createLocation = async (req, res) => {
   try {
     await schema.validateAsync(req.body);
+    if (!req.body.location_logo) {
+      if (!req.file) {
+        return res
+          .status(400)
+          .send({ status: 400, message: "Location Logo Required" });
+      }
+    }
+    if (req.file) {
+      req.body.location_logo = await getDropBoxLink(
+        "/location logo/" +
+          generateRandomNumber(1111, 9999) +
+          "-" +
+          req.file.filename,
+        req.file.path
+      );
+      await fs.unlinkSync(req.file.path);
+    }
+
     const locationCreated = await insertNewDocument("location", req.body);
     const { _id } = locationCreated;
     console.log({ locationCreated });

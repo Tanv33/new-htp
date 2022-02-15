@@ -14,6 +14,7 @@ const getRequiredFields = async (req, res) => {
       employee_location,
     });
   } catch (e) {
+    console.log(e);
     return res.status(400).send({ status: 400, message: e.message });
   }
 };

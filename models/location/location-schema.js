@@ -7,6 +7,10 @@ const locationSchema = new mongoose.Schema(
       type: schemaType.TypeString,
       // required: true,
     },
+    location_logo: {
+      type: schemaType.TypeString,
+      // required: true,
+    },
     email: {
       type: schemaType.TypeString,
       // required: true,
@@ -32,7 +36,7 @@ const locationSchema = new mongoose.Schema(
       // required: true,
     },
     patient_required_fields: {
-      type: Object,
+      type: schemaType.TypeArray,
       // required: true,
     },
     production: {

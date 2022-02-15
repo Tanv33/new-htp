@@ -18,11 +18,13 @@ const consentHtml = require("../../public/pdf/tetindConsent");
 
 const addPatient = async (req, res) => {
   try {
+    const user = await findOne("user", { _id: req.userId });
     const medicalProfession = await getPopulatedData(
       "user",
       { _id: req.userId },
       "employee_location"
     );
+    console.log(medicalProfession);
     if (!medicalProfession.length) {
       return res.status(400).send({
         status: 400,
@@ -33,38 +35,41 @@ const addPatient = async (req, res) => {
     const { patient_required_fields } = employee_location;
     // creating an empty object and looping values from manager required fields and inserting keys which are required values and keys values are Joi.required()
     let obj = {};
+    // Array
     // console.log({ patient_required_fields });
-    // patient_required_fields.map((field) => {
-    //   obj[field] = Joi.required();
-    // });
-    for (const key in patient_required_fields) {
-      // console.log(key.required);
-      if (patient_required_fields[key].required) {
-        obj[key] = Joi.required();
-      }
-    }
-    obj.patient_signature = Joi.required();
+    patient_required_fields.map((field) => {
+      obj[field] = Joi.required();
+    });
+    //  Object
+    // for (const key in patient_required_fields) {
+    //   // console.log(key.required);
+    //   if (patient_required_fields[key].required) {
+    //     obj[key] = Joi.required();
+    //   }
+    // }
+    // obj.patient_signature = Joi.required();
     // console.log(obj);
     const schema = Joi.object(obj);
     await schema.validateAsync(req.body);
     // After validation
-    const { test_type, tested_by, full_name } = req.body;
+    const { test_type, first_name } = req.body;
     const check_test_type_exist = await findOne("testType", {
-      type: test_type,
+      name: test_type.name,
+      types: test_type.type,
     });
     if (!check_test_type_exist) {
       return res
         .status(404)
         .send({ status: 404, message: "Test Type not exist!" });
     }
-    const check_tested_user_exist = await findOne("user", {
-      username: tested_by,
-    });
-    if (!check_tested_user_exist) {
-      return res
-        .status(404)
-        .send({ status: 404, message: "Tested User not exist!" });
-    }
+    // const check_tested_user_exist = await findOne("user", {
+    //   username: tested_by,
+    // });
+    // if (!check_tested_user_exist) {
+    //   return res
+    //     .status(404)
+    //     .send({ status: 404, message: "Tested User not exist!" });
+    // }
     // Signature required
     if (!req.body.patient_signature) {
       return res.status(400).send({
@@ -138,14 +143,15 @@ const addPatient = async (req, res) => {
       `./public/qrcodes/${pid}.png`,
       false
     );
+    req.body.location_id = user.employee_location;
+    req.body.created_by = req.userId;
     req.body.patient_signature = patientSignatureLink;
     req.body.signature = signaturePdfLink;
     req.body.consent_link = consentPdfLink;
     req.body.pid = pid;
     req.body.pid_link = qrcodeLink;
-    req.body.test_type = check_test_type_exist._id;
-    req.body.tested_by = check_tested_user_exist._id;
-    req.body.created_by = req.userId;
+    req.body.test_type = test_type;
+    // req.body.tested_by = check_tested_user_exist._id;
     const patient_created = await insertNewDocument("patient", req.body);
 
     if (test_type === "Rapid Antigen") {
@@ -153,7 +159,7 @@ const addPatient = async (req, res) => {
         res,
         "AllTestsApplicationEmail",
         {
-          username: full_name,
+          username: first_name,
           test_type: test_type,
           time: "15 to 20 minutes",
           qrcodelink: req.body.pid_link,
@@ -181,7 +187,7 @@ const addPatient = async (req, res) => {
         res,
         "AllTestsApplicationEmail",
         {
-          username: full_name,
+          username: first_name,
           test_type: test_type,
           time: "24 hours or less",
           qrcodelink: req.body.pid_link,

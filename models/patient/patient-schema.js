@@ -11,7 +11,35 @@ const patientSchema = new mongoose.Schema(
       type: schemaType.TypeString,
       // required: true,
     },
-    full_name: {
+    date_of_birth: {
+      type: schemaType.TypeDate,
+      // required: true,
+    },
+    gender: {
+      type: schemaType.TypeString,
+      // required: true,
+    },
+    pregnant: {
+      type: schemaType.TypeString,
+      // required: true,
+    },
+    sex_assign_at_birth: {
+      type: schemaType.TypeString,
+      // required: true,
+    },
+    race: {
+      type: schemaType.TypeString,
+      // required: true,
+    },
+    language: {
+      type: schemaType.TypeString,
+      // required: true,
+    },
+    ethnicity: {
+      type: schemaType.TypeString,
+      // required: true,
+    },
+    marital_status: {
       type: schemaType.TypeString,
       // required: true,
     },
@@ -19,18 +47,6 @@ const patientSchema = new mongoose.Schema(
       type: schemaType.TypeString,
       // unique: true,
       // required: true,
-    },
-    delivery_method: {
-      type: schemaType.TypeArray,
-        // required: true,
-    },
-    is_tested: {
-      type: schemaType.TypeString,
-      default: "No",
-    },
-    is_insured: {
-      type: schemaType.TypeBoolean,
-      default: false,
     },
     telephone: {
       type: schemaType.TypeString,
@@ -41,34 +57,71 @@ const patientSchema = new mongoose.Schema(
       type: schemaType.TypeString,
       // required: true,
     },
-    city: {
-      type: schemaType.TypeString,
-      // required: true,
-    },
     state: {
       type: schemaType.TypeString,
       // required: true,
     },
-    zip_code: {
+    city: {
       type: schemaType.TypeString,
       // required: true,
     },
-    date_of_birth: {
-      type: schemaType.TypeDate,
+    postal_code: {
+      type: schemaType.TypeString,
       // required: true,
     },
-    age: {
-      type: schemaType.TypeNumber,
+    payment: {
+      type: schemaType.TypeString,
       // required: true,
+    },
+    employement: {
+      type: schemaType.TypeString,
+      // required: true,
+    },
+    insurance_name: {
+      type: schemaType.TypeString,
+      // required: true,
+    },
+    insurance_policy_number: {
+      type: schemaType.TypeString,
+      // required: true,
+    },
+    insurance_image: {
+      type: schemaType.TypeString,
+      // required: true,
+    },
+    us_id: {
+      type: schemaType.TypeString,
+      // required: true,
+    },
+    us_id_no: {
+      type: schemaType.TypeString,
+      // required: true,
+    },
+    ssn: {
+      type: schemaType.TypeString,
+      // required: true,
+    },
+    // delivery_method: {
+    //   type: schemaType.TypeArray,
+    //   // required: true,
+    // },
+    patient_signature: {
+      type: schemaType.TypeString,
+      // required: true,
+    },
+
+    // static
+    location_id: {
+      type: schemaType.ObjectID,
+      ref: "location",
+    },
+    is_tested: {
+      type: schemaType.TypeString,
+      default: "No",
     },
     created_by: {
       type: schemaType.ObjectID,
       ref: "user",
-      // requried: true,
-    },
-    location: {
-      type: schemaType.ObjectID,
-      ref: "location",
       // requried: true,
     },
     signature: {
@@ -81,18 +134,10 @@ const patientSchema = new mongoose.Schema(
       // PDF File
       // required: true,
     },
-    doc_prescription: {
-      type: schemaType.TypeBoolean,
-      default: false,
-    },
-    doc_prescription_url: {
-      type: schemaType.TypeString,
-        // required: true,
-    },
     test_type: {
-      type: schemaType.ObjectID,
-      ref: "test-types",
-      // required: true,
+      type: Object,
+      // ref: "test-types",
+      required: true,
     },
     pid: {
       type: schemaType.TypeNumber,
@@ -103,14 +148,7 @@ const patientSchema = new mongoose.Schema(
       type: schemaType.TypeString,
       // required: true,
     },
-    sex: {
-      type: schemaType.TypeString,
-      // required: true,
-    },
-    passport: {
-      type: schemaType.TypeBoolean,
-      // default: false,
-    },
+
     created_date: {
       type: schemaType.TypeDate,
       default: Date.now,
@@ -120,22 +158,7 @@ const patientSchema = new mongoose.Schema(
       // PDF File
       // required: true,
     },
-    id_image: {
-      type: schemaType.TypeString,
-      // required: true,
-    },
-    identity_card: {
-      type: schemaType.TypeString,
-      // required: true,
-    },
-    insurance_image: {
-      type: schemaType.TypeString,
-      // required: true,
-    },
-    patient_signature: {
-      type: schemaType.TypeString,
-      // required: true,
-    },
+
     patient_test_result_sign_off: {
       type: schemaType.TypeString,
       // PDF File
