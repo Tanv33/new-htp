@@ -39,9 +39,9 @@ const addPatient = async (req, res) => {
     // console.log({ patient_required_fields });
     patient_required_fields.map((item) => {
       if (item?.required) {
-        obj[item] = Joi.string().required();
+        obj[item?.field] = Joi.string().required();
       } else {
-        obj[item] = Joi.string();
+        obj[item?.field] = Joi.string();
       }
     });
     //  Object
