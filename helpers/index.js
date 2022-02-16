@@ -58,6 +58,14 @@ const deleteDocument = async (modelDb, deleteQuery) =>
 const pushIfNotExists = async (modelDb, searchQuery, pushQuery) =>
   await Models[modelDb].update(searchQuery, { $addToSet: pushQuery });
 
+const getDataWithLimit = async (modelDb, searchQuery, sortedBy, skip, limit) =>
+  await Models[modelDb]
+    .find(searchQuery)
+    .sort(sortedBy)
+    .skip(skip)
+    .limit(limit)
+    .exec();
+
 const helperFunctionForQrCode = async (pid) => {
   return await QRCode.toFile(`./public/qrcodes/${pid}.png`, pid);
   // return new Promise((resolve, reject) => {
@@ -170,4 +178,5 @@ module.exports = {
   base64regex,
   dateFormat,
   findOneAndUpdate,
+  getDataWithLimit,
 };
