@@ -1,5 +1,5 @@
 const Joi = require("joi");
-const { find, getDataWithLimit } = require("../../helpers");
+const { getDataWithLimit } = require("../../helpers");
 
 const newSchema = Joi.object({
   tested: Joi.string().required(),
