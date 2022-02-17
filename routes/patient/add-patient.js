@@ -44,6 +44,8 @@ const addPatient = async (req, res) => {
         obj[item?.field] = Joi.string();
       }
     });
+    obj.patient_signature = Joi.required();
+
     //  Object
     // for (const key in patient_required_fields) {
     //   // console.log(key.required);
