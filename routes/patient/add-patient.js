@@ -55,6 +55,48 @@ const addPatient = async (req, res) => {
     // }
     // obj.patient_signature = Joi.required();
     // console.log(obj);
+    if (gender === "Female") {
+      if (!pregnant) {
+        obj["pregnant"] = Joi.required();
+        return res
+          .status(400)
+          .send({ status: 400, message: "Pregnant field required" });
+      }
+    }
+    if (payment === "Insurance") {
+      if (
+        !insurance_name &&
+        !insurance_policy_number &&
+        !req.files.insurance_image[0]
+      ) {
+        obj["insurance_name"] = Joi.required();
+        obj["insurance_policy_number"] = Joi.required();
+        return res.status(400).send({
+          status: 400,
+          message:
+            "All Insurance field required like insurance_name, insurance_policy_number, insurance_image",
+        });
+      }
+    }
+    if (us_id === "Yes") {
+      if (!us_id_no) {
+        obj["us_id_no"] = Joi.required();
+        return res.status(400).send({
+          status: 400,
+          message: "Us Id Number required",
+        });
+      }
+    }
+
+    if (us_id === "No") {
+      if (!ssn) {
+        obj["ssn"] = Joi.required();
+        return res.status(400).send({
+          status: 400,
+          message: "SSN required",
+        });
+      }
+    }
     const schema = Joi.object(obj);
     await schema.validateAsync(req.body);
     const {
@@ -67,43 +109,7 @@ const addPatient = async (req, res) => {
       us_id_no,
       ssn,
     } = req.body;
-    if (gender === "Female") {
-      if (!pregnant) {
-        return res
-          .status(400)
-          .send({ status: 400, message: "Pregnant field required" });
-      }
-    }
-    if (payment === "Insurance") {
-      if (
-        !insurance_name &&
-        !insurance_policy_number &&
-        !req.files.insurance_image[0]
-      ) {
-        return res.status(400).send({
-          status: 400,
-          message:
-            "All Insurance field required like insurance_name, insurance_policy_number, insurance_image",
-        });
-      }
-    }
-    if (us_id === "Yes") {
-      if (!us_id_no) {
-        return res.status(400).send({
-          status: 400,
-          message: "Us Id Number required",
-        });
-      }
-    }
 
-    if (us_id === "No") {
-      if (!ssn) {
-        return res.status(400).send({
-          status: 400,
-          message: "SSN required",
-        });
-      }
-    }
     // After validation
     const { test_type, first_name } = req.body;
     const check_test_type_exist = await findOne("testType", {
