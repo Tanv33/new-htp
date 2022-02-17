@@ -56,21 +56,21 @@ const addPatient = async (req, res) => {
     // obj.patient_signature = Joi.required();
     // console.log(obj);
     if (req.body.gender === "Female") {
+      obj["pregnant"] = Joi.required();
       if (!req.body.pregnant) {
-        obj["pregnant"] = Joi.required();
         return res
           .status(400)
           .send({ status: 400, message: "Pregnant field required" });
       }
     }
     if (req.body.payment === "Insurance") {
+      obj["insurance_name"] = Joi.required();
+      obj["insurance_policy_number"] = Joi.required();
       if (
         !req.body.insurance_name &&
         !req.body.insurance_policy_number &&
         !req.files.insurance_image[0]
       ) {
-        obj["insurance_name"] = Joi.required();
-        obj["insurance_policy_number"] = Joi.required();
         return res.status(400).send({
           status: 400,
           message:
@@ -79,8 +79,8 @@ const addPatient = async (req, res) => {
       }
     }
     if (req.body.us_id === "Yes") {
+      obj["us_id_no"] = Joi.required();
       if (!req.body.us_id_no) {
-        obj["us_id_no"] = Joi.required();
         return res.status(400).send({
           status: 400,
           message: "Us Id Number required",
@@ -89,8 +89,8 @@ const addPatient = async (req, res) => {
     }
 
     if (req.body.us_id === "No") {
+      obj["ssn"] = Joi.required();
       if (!req.body.ssn) {
-        obj["ssn"] = Joi.required();
         return res.status(400).send({
           status: 400,
           message: "SSN required",
