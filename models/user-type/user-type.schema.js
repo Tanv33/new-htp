@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const schemaType = require("../../types");
 
-const userTypeSchema = new mongoose.Schema(
+const vendorSchema = new mongoose.Schema(
   {
     type: {
       type: schemaType.TypeString,
@@ -15,4 +15,4 @@ const userTypeSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = userTypeSchema;
+module.exports = vendorSchema;

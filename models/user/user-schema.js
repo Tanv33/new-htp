@@ -75,6 +75,14 @@ const userSchema = new mongoose.Schema(
       ref: "location",
       requried: true,
     },
+    vendor_name: {
+      type: schemaType.TypeString,
+    },
+    vendor_locations: {
+      type: schemaType.TypeObjectId,
+      ref: "location",
+      requried: true,
+    },
   },
   { timestamps: true }
 );

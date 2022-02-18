@@ -11,5 +11,6 @@ db.patient = require("./patient");
 db.testType = require("./test-type");
 db.NumberGeneratorModel = require("./number-generator-model");
 db.location = require("./location");
+db.vendor = require("./vendor");
 
 module.exports = db;
