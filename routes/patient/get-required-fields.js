@@ -10,9 +10,17 @@ const getRequiredFields = async (req, res) => {
       "type employee_location"
     );
     const { employee_location } = medicalProfession[0];
+    return res.status(200).send({
+      status: 200,
+      employee_location,
+    });
     // const { test, patient_required_fields } = employee_location;
     // const template = requiredTemplate(patient_required_fields);
-    return res.status(200).send(`<h1>Arbaaz bhai Zindabad</h1>`);
+    // return res.status(200).send({
+    //   status: 200,
+    //   template,
+    //   test,
+    // });
   } catch (e) {
     console.log(e);
     return res.status(400).send({ status: 400, message: e.message });

@@ -15,6 +15,12 @@ const {
 const { send_email } = require("../../lib");
 const signatureHtml = require("../../public/pdf/Singnature");
 const consentHtml = require("../../public/pdf/tetindConsent");
+const fs = require("fs");
+
+// let testItems = Joi.object().keys({
+//   name: Joi.string().required(),
+//   types: Joi.array().required(),
+// });
 
 const addPatient = async (req, res) => {
   try {
@@ -66,11 +72,7 @@ const addPatient = async (req, res) => {
     if (req.body.payment === "Insurance") {
       obj.insurance_name = Joi.required();
       obj.insurance_policy_number = Joi.required();
-      if (
-        !req.body.insurance_name &&
-        !req.body.insurance_policy_number &&
-        !req.files.insurance_image[0]
-      ) {
+      if (!req.body.insurance_name || !req.body.insurance_policy_number) {
         return res.status(400).send({
           status: 400,
           message:
@@ -97,25 +99,44 @@ const addPatient = async (req, res) => {
         });
       }
     }
+    obj.test_type = Joi.object()
+      .keys({
+        name: Joi.string().required(),
+        type: Joi.string().required(),
+      })
+      .required();
     const schema = Joi.object(obj);
     await schema.validateAsync(req.body);
-    const {
-      gender,
-      pregnant,
-      payment,
-      insurance_name,
-      insurance_policy_number,
-      us_id,
-      us_id_no,
-      ssn,
-    } = req.body;
-
+    if (req.body.payment === "Insurance") {
+      if (!req.files.insurance_image) {
+        return res
+          .status(400)
+          .send({ status: 400, message: "Insurance image required" });
+      }
+    }
+    if (req?.files?.insurance_image) {
+      req.body.insurance_image = await getDropBoxLink(
+        "/insurance images/" +
+          generateRandomNumber(111, 999) +
+          "-" +
+          req.files.insurance_image[0].filename,
+        req.files.insurance_image[0].path
+      );
+    }
     // After validation
-    const { test_type, first_name } = req.body;
+    const { test_type, first_name, last_name } = req.body;
+    let name = "";
+    if (first_name) {
+      name = first_name;
+    }
+    if (last_name) {
+      name = last_name;
+    }
     const check_test_type_exist = await findOne("testType", {
       name: test_type.name,
       types: test_type.type,
     });
+    console.log(check_test_type_exist);
     if (!check_test_type_exist) {
       return res
         .status(404)
@@ -218,12 +239,12 @@ const addPatient = async (req, res) => {
         res,
         "AllTestsApplicationEmail",
         {
-          username: first_name,
+          username: name,
           test_type: test_type,
           time: "15 to 20 minutes",
           qrcodelink: req.body.pid_link,
         },
-        "American Specialty Lab",
+        "Health Titan Pro",
         "Patient Account Created",
         req.body.email,
         [
@@ -246,12 +267,12 @@ const addPatient = async (req, res) => {
         res,
         "AllTestsApplicationEmail",
         {
-          username: first_name,
+          username: name,
           test_type: test_type,
           time: "24 hours or less",
           qrcodelink: req.body.pid_link,
         },
-        "American Specialty Lab",
+        "Health Titan Pro",
         "Patient Account Created",
         req.body.email,
         [
@@ -269,7 +290,7 @@ const addPatient = async (req, res) => {
           },
         ]
       );
-      // fs.unlinkSync(`./public/qrcodes/${pid}.png`);
+      fs.unlinkSync(`./public/qrcodes/${pid}.png`);
     }
     return res.status(200).send({ status: 200, patient_created });
   } catch (e) {
