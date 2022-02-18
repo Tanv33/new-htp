@@ -88,9 +88,7 @@ const addPatient = async (req, res) => {
           message: "Us Id Number required",
         });
       }
-    }
-
-    if (req.body.us_id === "No") {
+    } else if (req.body.us_id === "No") {
       obj.ssn = Joi.required();
       if (!req.body.ssn) {
         return res.status(400).send({
@@ -98,6 +96,11 @@ const addPatient = async (req, res) => {
           message: "SSN required",
         });
       }
+    } else {
+      return res.status(400).send({
+        status: 400,
+        message: "A valid string is Yes or No for US id",
+      });
     }
     obj.test_type = Joi.object()
       .keys({
@@ -120,7 +123,8 @@ const addPatient = async (req, res) => {
           generateRandomNumber(111, 999) +
           "-" +
           req.files.insurance_image[0].filename,
-        req.files.insurance_image[0].path
+        req.files.insurance_image[0].path,
+        false
       );
     }
     // After validation
@@ -234,7 +238,7 @@ const addPatient = async (req, res) => {
     // req.body.tested_by = check_tested_user_exist._id;
     const patient_created = await insertNewDocument("patient", req.body);
 
-    if (test_type === "Rapid Antigen") {
+    if (test_type.name === "Rapid Antigen") {
       send_email(
         res,
         "AllTestsApplicationEmail",
@@ -290,7 +294,7 @@ const addPatient = async (req, res) => {
           },
         ]
       );
-      fs.unlinkSync(`./public/qrcodes/${pid}.png`);
+      // fs.unlinkSync(`./public/qrcodes/${pid}.png`);
     }
     return res.status(200).send({ status: 200, patient_created });
   } catch (e) {
