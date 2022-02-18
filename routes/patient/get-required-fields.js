@@ -1,4 +1,5 @@
 const { getPopulatedData } = require("../../helpers");
+const requiredTemplate = require("../../public/patient required field template");
 
 const getRequiredFields = async (req, res) => {
   try {
@@ -9,9 +10,12 @@ const getRequiredFields = async (req, res) => {
       "type employee_location"
     );
     const { employee_location } = medicalProfession[0];
+    const { test, patient_required_fields } = employee_location;
+    const template = requiredTemplate(patient_required_fields);
     return res.status(200).send({
       status: 200,
-      employee_location,
+      template,
+      test,
     });
   } catch (e) {
     console.log(e);
