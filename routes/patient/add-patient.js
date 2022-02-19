@@ -88,7 +88,8 @@ const addPatient = async (req, res) => {
           message: "Us Id Number required",
         });
       }
-    } else if (req.body.us_id === "No") {
+    }
+    if (req.body.us_id === "No") {
       obj.ssn = Joi.required();
       if (!req.body.ssn) {
         return res.status(400).send({
@@ -96,12 +97,13 @@ const addPatient = async (req, res) => {
           message: "SSN required",
         });
       }
-    } else {
-      return res.status(400).send({
-        status: 400,
-        message: "A valid string is Yes or No for US id",
-      });
     }
+    //  else {
+    //   return res.status(400).send({
+    //     status: 400,
+    //     message: "A valid string is Yes or No for US id",
+    //   });
+    // }
     obj.test_type = Joi.object()
       .keys({
         name: Joi.string().required(),
