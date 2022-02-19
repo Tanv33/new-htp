@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema(
     },
     telephone: {
       type: schemaType.TypeString,
-      unique: true,
+      // unique: true,
     },
     email: {
       type: schemaType.TypeString,
