@@ -20,5 +20,8 @@ router.use("/test", tokenVerification, test_Type);
 router.use("/patient", tokenVerification, mpVerification, patient);
 router.use("/admin", tokenVerification, adminVerification, admin);
 router.use("/manager", tokenVerification, managerVerification, manager);
+router.post("/rough", (req, res) => {
+  return res.status(200).send(req.body);
+});
 
 module.exports = router;

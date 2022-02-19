@@ -56,18 +56,6 @@ const adminSchema = Joi.object({
   telephone: Joi.string().min(17).required(),
   password: Joi.string().min(6).required(),
 });
-const vendorSchema = Joi.object({
-  vendor_name: Joi.string().required(),
-  vendor_locations: Joi.array().required(),
-  email: Joi.string().email().required(),
-  type: Joi.string().required(),
-  mid: Joi.string().required(),
-  password: Joi.string()
-    .min(6)
-    .pattern(new RegExp("^[a-zA-Z0-9]{6,30}$"))
-    .required(),
-});
-
 const signUpUser = async (req, res, next) => {
   const {
     full_name,
@@ -110,32 +98,6 @@ const signUpUser = async (req, res, next) => {
         full_name,
         email,
         telephone,
-        type: _id,
-        status: "Active",
-        password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
-      });
-      return res.status(200).send({ status: 200, user: new_user });
-    }
-    // For Vendor
-    if (type === "Vendor") {
-      await tokenVerification(req, res, next);
-      await managerVerification(req, res, next);
-      await vendorSchema.validateAsync(req.body);
-      const check_email_exist = await findOne("user", { email });
-      if (check_email_exist) {
-        return res
-          .status(404)
-          .send({ status: 404, message: "User already exist!" });
-      }
-      const check_user_type_exist = await findOne("userType", { type });
-      if (!check_user_type_exist) {
-        return res
-          .status(404)
-          .send({ status: 404, message: "User Type not exist!" });
-      }
-      const { _id } = check_user_type_exist;
-      const new_user = await insertNewDocument("user", {
-        ...req.body,
         type: _id,
         status: "Active",
         password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
@@ -237,7 +199,7 @@ const signUpUser = async (req, res, next) => {
     }
     // For Employees
     let user_types = await searchDocuments("userType", {
-      type: { $nin: ["Manager", "Asins"] },
+      type: { $nin: ["Manager", "Asins", "Vendor"] },
     });
     user_types = user_types.map((item) => item.type);
     if (user_types.includes(type)) {
