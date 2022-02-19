@@ -19,11 +19,10 @@ const getAllLocation = async (req, res) => {
     //   console.log(noOfPatient);
     //   noOfPatientArr.push(noOfPatient.length);
     // });
-    console.log(noOfPatientArr);
+    // console.log(noOfPatientArr);
     return res
       .status(200)
       .send({ status: 200, allLocations: manager_location });
-    // .send({ status: 200, allLocations: manager_location, noOfPatientArr });
   } catch (e) {
     console.log(e);
     return res.status(400).send({ status: 400, message: e.message });
