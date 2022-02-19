@@ -1,9 +1,10 @@
 const { findOne, insertNewDocument } = require("../../../helpers");
-var SongSchema = require("mongoose").model("patient").schema;
+var patientSchema = require("mongoose").model("patient");
 
 const getPatientForm = async (req, res) => {
   try {
-    return res.status(200).send({ status: 200, user: new_user });
+    const patientForm = patientSchema.schema.obj;
+    return res.status(200).send({ status: 200, patientForm });
   } catch (e) {
     console.log(e);
     return res.status(400).send({ status: 400, message: e.message });
