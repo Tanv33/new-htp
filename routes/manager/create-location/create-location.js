@@ -9,7 +9,7 @@ const fs = require("fs");
 
 let testItems = Joi.object().keys({
   name: Joi.string().required(),
-  types: Joi.required(),
+  types: Joi.array().required(),
 });
 
 let patientItems = Joi.object().keys({
