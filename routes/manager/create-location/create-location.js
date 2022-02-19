@@ -21,6 +21,7 @@ const schema = Joi.object({
   location_name: Joi.string().required(),
   email: Joi.string().email().required(),
   zip_code: Joi.string().required(),
+  consent: Joi.string().required(),
   address: Joi.string().required(),
   city: Joi.string().required(),
   business_or_individual: Joi.string(),

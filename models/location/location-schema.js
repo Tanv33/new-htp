@@ -19,6 +19,10 @@ const locationSchema = new mongoose.Schema(
       type: schemaType.TypeString,
       // required: true,
     },
+    consent: {
+      type: schemaType.TypeString,
+      // required: true,
+    },
     state: {
       type: schemaType.TypeString,
       // required: true,
