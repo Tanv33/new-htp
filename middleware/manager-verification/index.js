@@ -11,7 +11,7 @@ const managerVerification = async (req, res, next) => {
     if (is_manager_user[0].type.type !== "Manager") {
       return res.status(400).send({
         status: 400,
-        message: "Manager can only Approve Employee",
+        message: "Manager can Only Access",
       });
     }
     next();

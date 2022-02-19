@@ -23,6 +23,8 @@ const schema = Joi.object({
   zip_code: Joi.string().required(),
   address: Joi.string().required(),
   city: Joi.string().required(),
+  business_or_individual: Joi.string().required(),
+  send_copy_to_email: Joi.boolean().required(),
   // state: Joi.string().required(),
   location_logo: Joi.string(),
   test: Joi.array().items(testItems).required(),

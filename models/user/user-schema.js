@@ -68,20 +68,20 @@ const userSchema = new mongoose.Schema(
     manager_location: {
       type: [schemaType.TypeObjectId],
       ref: "location",
-      requried: true,
+      // requried: true,
     },
     employee_location: {
       type: schemaType.TypeObjectId,
       ref: "location",
-      requried: true,
+      // requried: true,
     },
     vendor_name: {
       type: schemaType.TypeString,
     },
     vendor_locations: {
-      type: schemaType.TypeObjectId,
+      type: [schemaType.TypeObjectId],
       ref: "location",
-      requried: true,
+      // requried: true,
     },
   },
   { timestamps: true }

@@ -39,6 +39,12 @@ const locationSchema = new mongoose.Schema(
       type: schemaType.TypeArray,
       // required: true,
     },
+    business_or_individual: {
+      type: schemaType.TypeString,
+    },
+    send_copy_to_email: {
+      type: schemaType.TypeBoolean,
+    },
     production: {
       type: schemaType.TypeString,
     },
