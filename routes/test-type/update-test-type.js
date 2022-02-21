@@ -2,7 +2,7 @@ const { pushIfNotExists } = require("../../helpers");
 const Joi = require("joi");
 
 const schema = Joi.object({
-  types: Joi.string().required(),
+  types: Joi.array().required(),
 });
 
 const updateTestType = async (req, res) => {
