@@ -14,7 +14,12 @@ db.once("open", function () {
 });
 
 // * Cors
-app.use(cors());
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+  })
+);
 
 // * Body Parser
 app.use(bodyParser.json());
