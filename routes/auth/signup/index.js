@@ -199,7 +199,7 @@ const signUpUser = async (req, res, next) => {
     }
     // For Employees
     let user_types = await searchDocuments("userType", {
-      type: { $nin: ["Manager", "Asins", "Vendor"] },
+      type: { $nin: ["Manager", "Asins", "Vendor", "Production Manager"] },
     });
     user_types = user_types.map((item) => item.type);
     if (user_types.includes(type)) {
