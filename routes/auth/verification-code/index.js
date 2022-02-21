@@ -1,4 +1,4 @@
-const Joi = require("Joi");
+const Joi = require("joi");
 const { findOneSort, findOne } = require("../../../helpers");
 const bcrypt = require("bcryptjs");
 const { SECRET } = require("../../../config");
