@@ -32,7 +32,8 @@ const getPopulatedData = async (
 ) =>
   await Models[modelDb]
     .find(searchQuery)
-    .populate({ path: populateQuery, select: selectQuery });
+    .populate({ path: populateQuery, select: selectQuery })
+    .lean();
 
 const getFindSelectPopulateData = async (
   modelDb,
