@@ -1,8 +1,14 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { SECRET } = require("../../../config");
-const { getPopulatedData, findOne } = require("../../../helpers");
+const {
+  getPopulatedData,
+  findOne,
+  generateRandomNumber,
+  insertNewDocument,
+} = require("../../../helpers");
 const Joi = require("joi");
+const { send_email } = require("../../../lib");
 
 const schema = Joi.object({
   email: Joi.string().email().required(),
@@ -37,8 +43,33 @@ const loginUser = async (req, res) => {
             message: "Your Admin Type is not Active",
           });
         }
-        var token = jwt.sign({ user }, SECRET);
-        return res.status(200).send({ status: 200, user, token });
+        const verificationCode = generateRandomNumber(111111, 999999).toFixed(
+          0
+        );
+        await insertNewDocument("verification", {
+          email: user.email,
+          verification_key: bcrypt.hashSync(
+            verificationCode,
+            bcrypt.genSaltSync(10)
+          ),
+        });
+        // var token = jwt.sign({ user }, SECRET);
+        // return res.status(200).send({ status: 200, user, token });
+        send_email(
+          res,
+          "verificationCodeTemp",
+          {
+            username: user.full_name,
+            verification: verificationCode,
+          },
+          "Health Titan Pro",
+          "Verification Code",
+          user.email
+        );
+        return res.status(200).send({
+          status: 200,
+          message: "Verification code send Successfully",
+        });
       }
       // For Manager and others
       const passwordIsValid = bcrypt.compareSync(password, user.password);
@@ -74,7 +105,34 @@ const loginUser = async (req, res) => {
           .status(404)
           .send({ status: 404, message: "There is no manager with your mid" });
       }
-      var token = jwt.sign({ user }, SECRET);
+      if (user.type.type === "Manager") {
+        const verificationCode = generateRandomNumber(111111, 999999).toFixed(
+          0
+        );
+        await insertNewDocument("verification", {
+          email: user.email,
+          verification_key: bcrypt.hashSync(
+            verificationCode,
+            bcrypt.genSaltSync(10)
+          ),
+        });
+        send_email(
+          res,
+          "verificationCodeTemp",
+          {
+            username: user.full_name,
+            verification: verificationCode,
+          },
+          "Health Titan Pro",
+          "Verification Code",
+          user.email
+        );
+        return res.status(200).send({
+          status: 200,
+          message: "Verification code send Successfully",
+        });
+      }
+      const token = jwt.sign({ user }, SECRET);
       console.log(user);
       return res.status(200).send({ status: 200, user, token });
     } else {
@@ -83,6 +141,7 @@ const loginUser = async (req, res) => {
         .send({ status: 404, message: "User does not exist!" });
     }
   } catch (e) {
+    console.log(e);
     return res.status(400).send({ status: 400, message: e.message });
   }
 };

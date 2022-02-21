@@ -7,6 +7,7 @@ const confrimOtp = require("./confirm-otp");
 const checkPassword = require("./check-password");
 const getManagerMid = require("./get-manager-mid-location");
 const getEmployees = require("./get-employees");
+const verifyCode = require("./verification-code");
 const { upload } = require("../../lib");
 // const checkPassword = require("./check-password");
 // const { tokenVerification } = require("../../middleware");
@@ -26,6 +27,7 @@ router.post("/confirm-otp", confrimOtp);
 router.post("/checkpassword", checkPassword);
 router.get("/get-manager-mid", getManagerMid);
 router.get("/get-employees", getEmployees);
+router.post("/get-verify", verifyCode);
 // router.post("/", checkPassword);
 
 module.exports = router;
