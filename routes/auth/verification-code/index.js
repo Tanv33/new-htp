@@ -1,5 +1,5 @@
 const Joi = require("joi");
-const { findOneSort, findOne } = require("../../../helpers");
+const { findOneSort, getPopulatedData } = require("../../../helpers");
 const bcrypt = require("bcryptjs");
 const { SECRET } = require("../../../config");
 const jwt = require("jsonwebtoken");
@@ -36,7 +36,13 @@ const verifyCode = async (req, res) => {
         .send({ status: 400, message: "Wrong Verification Code" });
     }
     await check_user.updateOne({ used: true });
-    const user = await findOne("user", { email });
+    const populatedUser = await getPopulatedData(
+      "user",
+      { email },
+      "type",
+      "type status"
+    );
+    const user = populatedUser[0];
     user.password = undefined;
     const token = jwt.sign({ user }, SECRET);
     // console.log(user);

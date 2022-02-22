@@ -61,6 +61,8 @@ const loginUser = async (req, res) => {
           {
             username: user.full_name,
             verification: verificationCode,
+            email: user.email,
+            telephone: user.telephone,
           },
           "Health Titan Pro",
           "Verification Code",
@@ -122,6 +124,8 @@ const loginUser = async (req, res) => {
           {
             username: user.full_name,
             verification: verificationCode,
+            email: user.email,
+            telephone: user.telephone,
           },
           "Health Titan Pro",
           "Verification Code",

@@ -3,7 +3,6 @@ const {
   insertNewDocument,
   findOne,
   getPopulatedData,
-  find,
   searchDocuments,
   getDropBoxLink,
   _base64ToArrayBuffer,
@@ -12,10 +11,6 @@ const {
 const bcrypt = require("bcryptjs");
 const fs = require("fs");
 const { send_email } = require("../../../lib");
-const {
-  managerVerification,
-  tokenVerification,
-} = require("../../../middleware");
 
 const managerSchema = Joi.object({
   full_name: Joi.string().required(),

@@ -21,6 +21,7 @@ const schema = Joi.object({
 
 const forgetPassword = async (req, res) => {
   let name = "";
+  let telephoneNumber = "";
   const { email, telephone } = req.body;
   try {
     await schema.validateAsync(req.body);
@@ -31,11 +32,19 @@ const forgetPassword = async (req, res) => {
           .status(400)
           .send({ status: 400, message: "Email not exist" });
       }
+      // Employee Condition
       if (check_email.first_name && check_email.last_name) {
         name = check_email.first_name + " " + check_email.last_name;
+        const managerObj = await findOne("userType", { type: "Manager" });
+        telephoneNumber = await findOne("user", {
+          type: managerObj._id,
+          mid: check_email.mid,
+        });
       }
+      // Manager Condition
       if (check_email.full_name) {
         name = check_email.full_name;
+        telephoneNumber = check_email.telephone;
       }
       // Function for creating OTP key
       const otp_key = generateRandomNumber(111111, 999999).toFixed(0);
@@ -46,9 +55,9 @@ const forgetPassword = async (req, res) => {
       send_email(
         res,
         "forgotPassword",
-        { username: name, OTP: otp_key },
+        { username: name, OTP: otp_key, telephone: telephoneNumber },
         "Health Titan Pro",
-        "Verification Key",
+        "OTP Key",
         email
       );
       res.status(200).send({ status: 200, message: "Otp send successfully" });
