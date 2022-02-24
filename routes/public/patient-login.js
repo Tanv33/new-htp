@@ -13,8 +13,12 @@ const patientLogin = async (req, res) => {
     await patientLoginSchema.validateAsync(req.query);
     const { first_name, last_name, date_of_birth, pid } = req.query;
     const patient = await findOne("patient", {
-      first_name,
-      last_name,
+      first_name: {
+        $regex: new RegExp("^" + first_name.toLowerCase() + "$", "i"),
+      },
+      last_name: {
+        $regex: new RegExp("^" + last_name.toLowerCase() + "$", "i"),
+      },
       date_of_birth,
       pid,
     });
