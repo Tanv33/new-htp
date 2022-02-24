@@ -73,7 +73,7 @@ const patientSchema = new mongoose.Schema(
       type: schemaType.TypeString,
       // required: true,
     },
-    employement: {
+    employment: {
       type: schemaType.TypeString,
       // required: true,
     },
