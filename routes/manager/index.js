@@ -4,7 +4,7 @@ const approveEmployee = require("./approve-employee");
 const location = require("./location");
 const searchEmployee = require("./search-employee");
 const vendor = require("./vendor");
-const patientForm = require("./get-patient-form");
+const patientForm = require("./patient");
 
 router.use("/location", location);
 router.use("/employee", approveEmployee);
