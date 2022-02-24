@@ -98,6 +98,15 @@ const addPatient = async (req, res) => {
         });
       }
     }
+    let paymentArr = ["Production", "Employment"];
+    if (paymentArr.includes(req.body.payment)) {
+      obj.employment = Joi.required();
+      if (!req.body.employment) {
+        return res
+          .status(400)
+          .send({ status: 400, message: "employment is required" });
+      }
+    }
     //  else {
     //   return res.status(400).send({
     //     status: 400,
@@ -128,15 +137,6 @@ const addPatient = async (req, res) => {
         req.files.insurance_image[0].path,
         false
       );
-    }
-    let paymentArr = ["Production", "Employment"];
-    if (paymentArr.includes(req.body.payment)) {
-      obj.employment = Joi.required();
-      if (!req.body.employment) {
-        return res
-          .status(400)
-          .send({ status: 400, message: "employment is required" });
-      }
     }
     // After validation
     const { test_type, first_name, last_name } = req.body;
