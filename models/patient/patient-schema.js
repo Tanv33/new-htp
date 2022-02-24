@@ -122,7 +122,6 @@ const patientSchema = new mongoose.Schema(
     created_by: {
       type: schemaType.ObjectID,
       ref: "user",
-      // requried: true,
     },
     signature: {
       type: schemaType.TypeString,
