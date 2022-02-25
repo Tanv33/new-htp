@@ -16,11 +16,11 @@ const updateTestType = async (req, res) => {
     await schema.validateAsync(req.body);
     const { deleteType, addType, name } = req.body;
     if (name || addType) {
-      if (name.length) {
+      if (name?.length) {
         await updateDocument("testType", { _id: req.params.id }, { name });
       }
-      await addType.map(async (string) => {
-        if (string.length) {
+      await addType?.map(async (string) => {
+        if (string?.length) {
           await pushIfNotExists(
             "testType",
             { _id: req.params.id },
