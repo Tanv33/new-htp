@@ -17,7 +17,7 @@ router.post(
   "/register",
   upload.fields([
     { name: "manager_logo", maxCount: 1 },
-    { name: "manager_signature", maxCount: 1 },
+    { name: "production_manager_logo", maxCount: 1 },
   ]),
   signUp
 );

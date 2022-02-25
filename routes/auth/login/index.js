@@ -126,6 +126,7 @@ const loginUser = async (req, res) => {
             verification: verificationCode,
             email: user.email,
             telephone: user.telephone,
+            telephone: user.manager_logo,
           },
           "Health Titan Pro",
           "Verification Code",

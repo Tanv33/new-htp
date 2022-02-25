@@ -55,10 +55,19 @@ const userSchema = new mongoose.Schema(
     mid: {
       type: schemaType.TypeString,
     },
+    pmid: {
+      type: schemaType.TypeString,
+    },
     manager_logo: {
       type: schemaType.TypeString,
     },
     manager_signature: {
+      type: schemaType.TypeString,
+    },
+    production_manager_logo: {
+      type: schemaType.TypeString,
+    },
+    production_manager_signature: {
       type: schemaType.TypeString,
     },
     created_date: {

@@ -26,6 +26,20 @@ const managerSchema = Joi.object({
     .pattern(new RegExp("^[a-zA-Z0-9]{6,30}$"))
     .required(),
 });
+const productionManagerSchema = Joi.object({
+  full_name: Joi.string().required(),
+  email: Joi.string().email().required(),
+  pmid: Joi.string().required(),
+  telephone: Joi.string().min(17).required(),
+  lab_name: Joi.string().required(),
+  lab_address: Joi.string().required(),
+  production_manager_signature: Joi.string().required(),
+  type: Joi.string().required(),
+  password: Joi.string()
+    .min(6)
+    .pattern(new RegExp("^[a-zA-Z0-9]{6,30}$"))
+    .required(),
+});
 const employeeSchema = Joi.object({
   type: Joi.string().required(),
   first_name: Joi.string().required(),
@@ -62,6 +76,7 @@ const signUpUser = async (req, res, next) => {
     last_name,
     type,
     mid,
+    pmid,
     telephone,
     date_of_birth,
     employee_location,
@@ -71,6 +86,7 @@ const signUpUser = async (req, res, next) => {
     state,
     zip_code,
     location,
+    production_manager_signature,
   } = req.body;
   try {
     // For Asins
@@ -147,7 +163,10 @@ const signUpUser = async (req, res, next) => {
       }
       const { _id } = check_user_type_exist;
       req.body.manager_logo = await getDropBoxLink(
-        "/managerlogos/" + mid + "-" + req.files.manager_logo[0].filename,
+        "production/managerlogos/" +
+          mid +
+          "-" +
+          req.files.manager_logo[0].filename,
         req.files.manager_logo[0].path
       );
 
@@ -190,6 +209,114 @@ const signUpUser = async (req, res, next) => {
         email
       );
       fs.unlinkSync(req.files.manager_logo[0].path);
+      return res.status(200).send({ status: 200, user: new_user });
+    }
+    // For Production Manager
+    if (type === "Production Manager") {
+      // check string is of base64 or not
+      const base64regex =
+        /^data:image\/[a-z]+;base64,([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
+      if (!base64regex.test(production_manager_signature)) {
+        return res.status(400).send({
+          status: 400,
+          message: "Production Manager Signature should be in base64",
+        });
+      }
+
+      let imageType = [
+        "image/png",
+        "image/jpeg",
+        "image/jpg",
+        "image/gif",
+        "application\octet-stream",
+      ];
+      console.log(req.files.production_manager_logo);
+      if (!req.files.production_manager_logo) {
+        return res.status(400).send({
+          status: 400,
+          message: "Production Manager Logo Required",
+        });
+      }
+      if (req.files) {
+        if (
+          !imageType.includes(req.files.production_manager_logo[0].mimetype)
+        ) {
+          return res.status(400).send({
+            status: 400,
+            message: "Production Manager logo should be an image",
+          });
+        }
+      }
+      await productionManagerSchema.validateAsync(req.body);
+      const check_pmid_exist = await findOne("user", { pmid });
+      if (check_pmid_exist) {
+        return res
+          .status(404)
+          .send({ status: 404, message: "Pmid already exist!" });
+      }
+      const check_email_exist = await findOne("user", { email });
+      if (check_email_exist) {
+        return res
+          .status(404)
+          .send({ status: 404, message: "User already exist!" });
+      }
+      const check_user_type_exist = await findOne("userType", { type });
+      if (!check_user_type_exist) {
+        return res
+          .status(404)
+          .send({ status: 404, message: "User Type not exist!" });
+      }
+      const { _id } = check_user_type_exist;
+      req.body.production_manager_logo = await getDropBoxLink(
+        "/productionmanagerlogos/" +
+          mid +
+          "-" +
+          req.files.production_manager_logo[0].filename,
+        req.files.production_manager_logo[0].path
+      );
+
+      req.body.production_manager_signature = await getDropBoxLink(
+        "/production manager signature/" +
+          pmid +
+          "-" +
+          generateRandomNumber(11111, 99999) +
+          ".png",
+        _base64ToArrayBuffer(
+          production_manager_signature.replace(
+            /^data:image\/[a-z]+;base64,/,
+            ""
+          )
+        ),
+        true
+      );
+      const new_user = await insertNewDocument("user", {
+        full_name,
+        email,
+        mid,
+        telephone,
+        lab_name,
+        lab_address,
+        type: _id,
+        production_manager_logo: req.body.production_manager_logo,
+        production_manager_signature: req.body.production_manager_signature,
+        password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
+      });
+      // res.status(200).send({ status: 200, user: new_user });
+      send_email(
+        res,
+        "accoutCreatedTemp",
+        {
+          username: full_name,
+          production_manager_logo: req.body.production_manager_logo,
+          email: email,
+          telephone: telephone,
+          lab_address: lab_address,
+        },
+        "Health Titan Pro",
+        "Account Created",
+        email
+      );
+      fs.unlinkSync(req.files.production_manager_logo[0].path);
       return res.status(200).send({ status: 200, user: new_user });
     }
     // For Employees
@@ -257,11 +384,11 @@ const signUpUser = async (req, res, next) => {
       );
       return res.status(200).send({ status: 200, user: new_user });
     }
-    if (!user_types.includes(type)) {
-      return res
-        .status(400)
-        .send({ status: 400, message: "Please input correct credentials" });
-    }
+    // if (!user_types.includes(type)) {
+    return res
+      .status(400)
+      .send({ status: 400, message: "Please input correct credentials" });
+    // }
   } catch (e) {
     console.log(e);
     return res.status(400).send({ status: 400, message: e.message });

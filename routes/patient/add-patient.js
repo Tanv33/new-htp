@@ -258,6 +258,7 @@ const addPatient = async (req, res) => {
           test_type: test_type,
           time: "15 to 20 minutes",
           qrcodelink: req.body.pid_link,
+          // telephone: user.telephone, // edit the template and pass prop manager_logo , telephone , email , location_Description
         },
         "Health Titan Pro",
         "Patient Account Created",

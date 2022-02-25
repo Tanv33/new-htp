@@ -22,6 +22,7 @@ const approveManager = async (req, res) => {
           email: user.email,
           telephone: user.telephone,
           lab_address: user.lab_address,
+          email: user.email,
         },
         "Health Titan Pro",
         "Account Approved Successfully",
@@ -37,7 +38,9 @@ const approveManager = async (req, res) => {
           email: user.email,
           telephone: user.telephone,
           lab_address: user.lab_address,
+          email: user.email,
         },
+
         "Health Titan Pro",
         "Account Disabled",
         user.email
