@@ -93,6 +93,37 @@ const loginUser = async (req, res) => {
           message: "Your signup request is not approved yet",
         });
       }
+      // For Production Manager
+      if (user.type.type === "Production Manager") {
+        const verificationCode = generateRandomNumber(111111, 999999).toFixed(
+          0
+        );
+        await insertNewDocument("verification", {
+          email: user.email,
+          verification_key: bcrypt.hashSync(
+            verificationCode,
+            bcrypt.genSaltSync(10)
+          ),
+        });
+        send_email(
+          res,
+          "verificationCodeTemp",
+          {
+            username: user.full_name,
+            verification: verificationCode,
+            email: user.email,
+            telephone: user.telephone,
+            manager_logo: user.production_manager_logo,
+          },
+          "Health Titan Pro",
+          "Verification Code",
+          user.email
+        );
+        return res.status(200).send({
+          status: 200,
+          message: "Verification code send Successfully",
+        });
+      }
       // Matching type and mid with manager
       const findManagerId = await findOne("userType", { type: "Manager" });
       const { _id } = findManagerId;
@@ -126,7 +157,7 @@ const loginUser = async (req, res) => {
             verification: verificationCode,
             email: user.email,
             telephone: user.telephone,
-            telephone: user.manager_logo,
+            manager_logo: user.manager_logo,
           },
           "Health Titan Pro",
           "Verification Code",

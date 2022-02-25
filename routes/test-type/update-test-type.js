@@ -6,7 +6,7 @@ const {
 const Joi = require("joi");
 
 const schema = Joi.object({
-  name: Joi.string(),
+  name: Joi.string().allow(""),
   deleteType: Joi.array(),
   addType: Joi.array(),
 });
@@ -15,11 +15,16 @@ const updateTestType = async (req, res) => {
   try {
     await schema.validateAsync(req.body);
     const { deleteType, addType, name } = req.body;
-    if (name) {
+    if (name || addType) {
       await updateDocument("testType", { _id: req.params.id }, { name });
+      await pushIfNotExists(
+        "testType",
+        { _id: req.params.id },
+        { types: addType }
+      );
       return res
         .status(200)
-        .send({ status: 200, message: "Name updated successfully" });
+        .send({ status: 200, message: "Updated successfully" });
     }
     if (deleteType) {
       await findOneAndUpdate(
@@ -34,16 +39,6 @@ const updateTestType = async (req, res) => {
       return res
         .status(200)
         .send({ status: 200, message: "Type deleted successfully" });
-    }
-    if (addType) {
-      await pushIfNotExists(
-        "testType",
-        { _id: req.params.id },
-        { types: addType }
-      );
-      return res
-        .status(200)
-        .send({ status: 200, message: "Type added successfully" });
     }
   } catch (e) {
     res.status(400).send({ status: 400, message: e.message });
