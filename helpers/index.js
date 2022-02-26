@@ -176,6 +176,22 @@ const dateFormat = () => {
   return `${date.getFullYear()}${month}${day}`;
   //	return Math.ceil(date.getTime()/1000)
 };
+// DateFormatWith"-"sign
+const todayDateFormat = () => {
+  let date = new Date();
+  let month = date.getMonth() + 1;
+  if (month < 10) {
+    month = `0${month}`;
+  }
+  let day = date.getDate();
+  if (day < 10) {
+    day = `0${day}`;
+  }
+
+  //	date.setDate(date.getDate()+adds)
+  return `${date.getFullYear()}-${month}-${day}`;
+  //	return Math.ceil(date.getTime()/1000)
+};
 
 module.exports = {
   getPopulated,
@@ -201,4 +217,5 @@ module.exports = {
   getDataWithLimit,
   getCount,
   getPopulatedDataWithLimit,
+  todayDateFormat,
 };

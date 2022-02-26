@@ -1,4 +1,8 @@
-const { updateDocument } = require("../../helpers");
+const {
+  updateDocument,
+  dateFormat,
+  todayDateFormat,
+} = require("../../helpers");
 const Joi = require("joi");
 
 const schema = Joi.object({
@@ -32,6 +36,9 @@ const schema = Joi.object({
 });
 
 const updatePatient = async (req, res) => {
+  if (is_tested === "Yes") {
+    req.body.tested_date = todayDateFormat();
+  }
   try {
     await schema.validateAsync(req.body);
     const patient_updated = await updateDocument(
