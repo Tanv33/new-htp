@@ -1,8 +1,4 @@
-const {
-  updateDocument,
-  dateFormat,
-  todayDateFormat,
-} = require("../../helpers");
+const { updateDocument, todayDateFormat } = require("../../helpers");
 const Joi = require("joi");
 
 const schema = Joi.object({
@@ -32,14 +28,35 @@ const schema = Joi.object({
   is_tested: Joi.string(),
   test_type: Joi.object(),
   pid: Joi.string(),
+  bar_code: Joi.string(),
 });
 
 const updatePatient = async (req, res) => {
   try {
     await schema.validateAsync(req.body);
-    const { is_tested } = req.body;
+    const { is_tested, bar_code } = req.body;
     if (is_tested === "Yes") {
       req.body.tested_date = todayDateFormat();
+      if (!bar_code) {
+        return res.status(400).send({
+          status: 400,
+          message: "Barcode is required",
+        });
+      }
+      if (bar_code.length < 10) {
+        return res.status(400).send({
+          status: 400,
+          message: "Barcode should be 10 integer long",
+        });
+      }
+    }
+    if (is_tested === "No") {
+      if (bar_code) {
+        return res.status(400).send({
+          status: 400,
+          message: "Barcode is not allowed",
+        });
+      }
     }
     const patient_updated = await updateDocument(
       "patient",

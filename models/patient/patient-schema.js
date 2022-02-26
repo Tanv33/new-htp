@@ -172,6 +172,10 @@ const patientSchema = new mongoose.Schema(
       type: schemaType.TypeDate,
       // required: true,
     },
+    bar_code: {
+      type: schemaType.TypeString,
+      // required: true,
+    },
   },
   { timestamps: true }
 );

@@ -47,6 +47,9 @@ const getFindSelectPopulateData = async (
     .select(selectOnFind)
     .populate({ path: populateQuery, select: selectQuery });
 
+const findOneAndSelect = async (modelDb, searchQuery, selectOnFindOne) =>
+  await Models[modelDb].findOne(searchQuery).select(selectOnFindOne);
+
 const getPopulated = async (modelDb, prevDocRef, populateQuery) =>
   await Models[modelDb].populate(prevDocRef, populateQuery);
 
@@ -218,4 +221,5 @@ module.exports = {
   getCount,
   getPopulatedDataWithLimit,
   todayDateFormat,
+  findOneAndSelect,
 };

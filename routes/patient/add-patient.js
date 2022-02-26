@@ -175,7 +175,7 @@ const addPatient = async (req, res) => {
     if (!base64regex.test(req.body.patient_signature)) {
       return res.status(400).send({
         status: 400,
-        message: "Manager Signature should be in base64",
+        message: "Patient Signature should be in base64",
       });
     }
     // Signature
