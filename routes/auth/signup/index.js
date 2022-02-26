@@ -163,10 +163,7 @@ const signUpUser = async (req, res, next) => {
       }
       const { _id } = check_user_type_exist;
       req.body.manager_logo = await getDropBoxLink(
-        "/manager logos/" +
-          mid +
-          "-" +
-          req.files.manager_logo[0].filename,
+        "/manager logos/" + mid + "-" + req.files.manager_logo[0].filename,
         req.files.manager_logo[0].path
       );
 
@@ -228,7 +225,7 @@ const signUpUser = async (req, res, next) => {
         "image/jpeg",
         "image/jpg",
         "image/gif",
-        "application\octet-stream",
+        "applicationoctet-stream",
       ];
       console.log(req.files.production_manager_logo);
       if (!req.files.production_manager_logo) {
