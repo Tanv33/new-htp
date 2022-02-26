@@ -163,7 +163,7 @@ const signUpUser = async (req, res, next) => {
       }
       const { _id } = check_user_type_exist;
       req.body.manager_logo = await getDropBoxLink(
-        "production/managerlogos/" +
+        "/manager logos/" +
           mid +
           "-" +
           req.files.manager_logo[0].filename,
@@ -268,7 +268,7 @@ const signUpUser = async (req, res, next) => {
       }
       const { _id } = check_user_type_exist;
       req.body.production_manager_logo = await getDropBoxLink(
-        "/productionmanagerlogos/" +
+        "/production manager logos/" +
           mid +
           "-" +
           req.files.production_manager_logo[0].filename,
