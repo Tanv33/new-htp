@@ -1,4 +1,4 @@
-const { getPopulatedData, find } = require("../../../helpers");
+const { getPopulatedData, find, getCount } = require("../../../helpers");
 
 const getAllLocation = async (req, res) => {
   try {
@@ -9,10 +9,14 @@ const getAllLocation = async (req, res) => {
     );
     const { manager_location } = allLocations[0];
     for (let index = 0; index < manager_location.length; index++) {
-      let patients = await find("patient", {
+      let patients = await getCount("patient", {
         location_id: manager_location[index]._id,
       });
-      manager_location[index].noOfPatient = patients.length;
+      let employees = await getCount("user", {
+        employee_location: manager_location[index]._id,
+      });
+      manager_location[index].noOfPatient = patients;
+      manager_location[index].noOfEmployees = employees;
     }
     return res
       .status(200)

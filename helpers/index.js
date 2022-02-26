@@ -52,6 +52,8 @@ const getPopulated = async (modelDb, prevDocRef, populateQuery) =>
 
 const getAggregate = async (modelDb, aggregateQuery) =>
   await Models[modelDb].aggregate(aggregateQuery);
+const getCount = async (modelDb, aggregateQuery) =>
+  await Models[modelDb].count(aggregateQuery);
 
 const deleteDocument = async (modelDb, deleteQuery) =>
   await Models[modelDb].deleteOne(deleteQuery);
@@ -62,6 +64,23 @@ const pushIfNotExists = async (modelDb, searchQuery, pushQuery) =>
 const getDataWithLimit = async (modelDb, searchQuery, sortedBy, skip, limit) =>
   await Models[modelDb]
     .find(searchQuery)
+    .sort(sortedBy)
+    .skip(skip)
+    .limit(limit)
+    .exec();
+
+const getPopulatedDataWithLimit = async (
+  modelDb,
+  searchQuery,
+  populateQuery,
+  selectQuery,
+  sortedBy,
+  skip,
+  limit
+) =>
+  await Models[modelDb]
+    .find(searchQuery)
+    .populate({ path: populateQuery, select: selectQuery })
     .sort(sortedBy)
     .skip(skip)
     .limit(limit)
@@ -180,4 +199,6 @@ module.exports = {
   dateFormat,
   findOneAndUpdate,
   getDataWithLimit,
+  getCount,
+  getPopulatedDataWithLimit,
 };

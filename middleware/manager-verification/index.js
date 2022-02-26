@@ -8,7 +8,8 @@ const managerVerification = async (req, res, next) => {
       "type",
       "type"
     );
-    if (is_manager_user[0].type.type !== "Manager") {
+    let manageArr = ["Manager", "Production Manager"];
+    if (!manageArr.includes(is_manager_user[0].type.type)) {
       return res.status(400).send({
         status: 400,
         message: "Manager can Only Access",
