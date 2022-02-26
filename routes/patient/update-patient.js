@@ -32,15 +32,14 @@ const schema = Joi.object({
   is_tested: Joi.string(),
   test_type: Joi.object(),
   pid: Joi.string(),
-  tested_date: Joi.date(),
 });
 
 const updatePatient = async (req, res) => {
-  if (is_tested === "Yes") {
-    req.body.tested_date = todayDateFormat();
-  }
   try {
     await schema.validateAsync(req.body);
+    if (is_tested === "Yes") {
+      req.body.tested_date = todayDateFormat();
+    }
     const patient_updated = await updateDocument(
       "patient",
       { _id: req.params.id },
