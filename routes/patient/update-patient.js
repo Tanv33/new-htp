@@ -37,6 +37,7 @@ const schema = Joi.object({
 const updatePatient = async (req, res) => {
   try {
     await schema.validateAsync(req.body);
+    const { is_tested } = req.body;
     if (is_tested === "Yes") {
       req.body.tested_date = todayDateFormat();
     }
