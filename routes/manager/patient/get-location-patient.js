@@ -1,4 +1,4 @@
-const { findOne, getPopulatedData } = require("../../../helpers");
+const { findOne, getPopulatedData, find } = require("../../../helpers");
 
 const getLocationPatient = async (req, res) => {
   try {

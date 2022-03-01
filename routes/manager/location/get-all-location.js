@@ -8,7 +8,7 @@ const getAllLocation = async (req, res) => {
       "type manager_location"
     );
     const { manager_location } = allLocations[0];
-    console.log({ allLocations });
+    // console.log({ allLocations });
     const medicalProfession = await findOne("userType", {
       type: "Medical Profession",
     });
@@ -44,7 +44,7 @@ const getAllLocation = async (req, res) => {
         location_id: manager_location[index]._id,
         "test_type.name": "Omicron",
       });
-      console.log(no_of_omicron_patient);
+      // console.log(no_of_omicron_patient);
       // A single function for how many number of Covid and Omicron patient are there in the patient colloection
       manager_location[index].noOfPatient = patients;
       manager_location[index].noOfEmployees = employees;
