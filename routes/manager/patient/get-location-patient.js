@@ -1,4 +1,4 @@
-const { findOne, getPopulatedData, find } = require("../../../helpers");
+const { findOne, getPopulatedData } = require("../../../helpers");
 
 const getLocationPatient = async (req, res) => {
   try {
@@ -7,7 +7,8 @@ const getLocationPatient = async (req, res) => {
     let locationsPatients = await getPopulatedData(
       "patient",
       { location_id: { $in: manager_location } },
-      "location_id"
+      "location_id",
+      "location_name"
     );
     return res.status(200).send({ status: 200, locationsPatients });
   } catch (e) {
