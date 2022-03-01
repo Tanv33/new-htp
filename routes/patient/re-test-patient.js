@@ -10,38 +10,45 @@ const {
   dateFormat,
 } = require("../../helpers");
 const reTestSchema = Joi.object({
-  _id: Joi.string().required(),
-  patient_signature: Joi.string().required(),
+  pid: Joi.number().required(),
+  // patient_signature: Joi.string().required(),
+  test_type: Joi.object()
+    .keys({
+      name: Joi.string().required(),
+      type: Joi.string().required(),
+    })
+    .required(),
 });
 const reTestPatient = async (req, res) => {
   try {
     await reTestSchema.validateAsync(req.body);
-    const { _id, patient_signature } = req.body;
-    if (!base64regex.test(patient_signature)) {
-      return res.status(400).send({
-        status: 400,
-        message: "Patient Signature should be in base64",
-      });
-    }
-    const patientSignatureLink = await getDropBoxLink(
-      "/patient signature/" +
-        `patient-signature-${generateRandomNumber(11111, 99999).toFixed(
-          0
-        )}.png`,
-      _base64ToArrayBuffer(
-        patient_signature.replace(/^data:image\/[a-z]+;base64,/, "")
-      ),
-      true
-    );
+    // const { pid, patient_signature } = req.body;
+    const { pid, test_type } = req.body;
+    // if (!base64regex.test(patient_signature)) {
+    //   return res.status(400).send({
+    //     status: 400,
+    //     message: "Patient Signature should be in base64",
+    //   });
+    // }
+    // const patientSignatureLink = await getDropBoxLink(
+    //   "/patient signature/" +
+    //     `patient-signature-${generateRandomNumber(11111, 99999).toFixed(
+    //       0
+    //     )}.png`,
+    //   _base64ToArrayBuffer(
+    //     patient_signature.replace(/^data:image\/[a-z]+;base64,/, "")
+    //   ),
+    //   true
+    // );
     const patient = await findOneAndSelect(
       "patient",
-      { _id },
-      "-_id -__v -created_date -createdAt -updatedAt -order_no -patient_signature -is_tested -bar_code"
+      { pid },
+      "-_id -__v -created_date -createdAt -updatedAt -order_no -is_tested -bar_code -test_type"
     );
     if (!patient) {
       return res
         .status(404)
-        .send({ status: 404, message: "No Patient Found with your given id" });
+        .send({ status: 404, message: "No Patient Found with your given pid" });
     }
     const orderNoDoc = await findOneAndUpdate(
       "NumberGeneratorModel",
@@ -53,7 +60,8 @@ const reTestPatient = async (req, res) => {
     const orederNoSequenceNumber = (orderNoValue + "").padStart(4, "0");
     const order_no = dateFormat() + orederNoSequenceNumber;
 
-    patient.patient_signature = patientSignatureLink;
+    // patient.patient_signature = patientSignatureLink;
+    patient.test_type = test_type;
     patient.order_no = order_no;
 
     const reCreatePatient = await insertNewDocument("patient", patient);

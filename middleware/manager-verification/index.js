@@ -8,7 +8,7 @@ const managerVerification = async (req, res, next) => {
       "type",
       "type"
     );
-    let manageArr = ["Manager", "Production Manager"];
+    let manageArr = ["Manager"];
     if (!manageArr.includes(is_manager_user[0].type.type)) {
       return res.status(400).send({
         status: 400,

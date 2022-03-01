@@ -180,6 +180,11 @@ const patientSchema = new mongoose.Schema(
       type: schemaType.TypeNumber,
       // required: true,
     },
+    is_review: {
+      type: schemaType.TypeBoolean,
+      default: false,
+      // required: true,
+    },
   },
   { timestamps: true }
 );

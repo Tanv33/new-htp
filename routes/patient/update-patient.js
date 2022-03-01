@@ -58,6 +58,7 @@ const updatePatient = async (req, res) => {
         });
       }
     }
+    req.body.is_review = true;
     const patient_updated = await updateDocument(
       "patient",
       { _id: req.params.id },
