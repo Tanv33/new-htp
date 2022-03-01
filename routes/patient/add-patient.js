@@ -232,6 +232,15 @@ const addPatient = async (req, res) => {
     const value = numberDoc.value;
     const sequenceNumber = (value + "").padStart(4, "0");
     const pid = dateFormat() + sequenceNumber;
+    const orderNoDoc = await findOneAndUpdate(
+      "NumberGeneratorModel",
+      { name: "pid" },
+      { $inc: { value: 1 } },
+      { new: true }
+    );
+    const orderNoValue = orderNoDoc.value;
+    const orederNoSequenceNumber = (orderNoValue + "").padStart(4, "0");
+    const order_no = dateFormat() + orederNoSequenceNumber;
     await helperFunctionForQrCode(pid);
     const qrcodeLink = await getDropBoxLink(
       "/qrcode/" + pid + ".png",
@@ -244,6 +253,7 @@ const addPatient = async (req, res) => {
     req.body.signature = signaturePdfLink;
     req.body.consent_link = consentPdfLink;
     req.body.pid = pid;
+    req.body.order_no = order_no;
     req.body.pid_link = qrcodeLink;
     req.body.test_type = test_type;
     // req.body.tested_by = check_tested_user_exist._id;

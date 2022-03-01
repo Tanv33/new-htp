@@ -4,9 +4,10 @@ const {
   getDropBoxLink,
   _base64ToArrayBuffer,
   generateRandomNumber,
-  findOne,
-  insertNewDocument,
   findOneAndSelect,
+  insertNewDocument,
+  findOneAndUpdate,
+  dateFormat,
 } = require("../../helpers");
 const reTestSchema = Joi.object({
   _id: Joi.string().required(),
@@ -35,23 +36,32 @@ const reTestPatient = async (req, res) => {
     const patient = await findOneAndSelect(
       "patient",
       { _id },
-      "-_id -__v -created_date -createdAt -updatedAt"
+      "-_id -__v -created_date -createdAt -updatedAt -order_no -patient_signature -is_tested -bar_code"
     );
     if (!patient) {
       return res
         .status(404)
         .send({ status: 404, message: "No Patient Found with your given id" });
     }
-    patient.patient_signature = patientSignatureLink;
+    const orderNoDoc = await findOneAndUpdate(
+      "NumberGeneratorModel",
+      { name: "pid" },
+      { $inc: { value: 1 } },
+      { new: true }
+    );
+    const orderNoValue = orderNoDoc.value;
+    const orederNoSequenceNumber = (orderNoValue + "").padStart(4, "0");
+    const order_no = dateFormat() + orederNoSequenceNumber;
 
-    // const reCreatePatient = await insertNewDocument("patient", patient);
-    return res
-      .status(200)
-      .send({
-        status: 200,
-        message: "Patient Recreated Successfully",
-        patient,
-      });
+    patient.patient_signature = patientSignatureLink;
+    patient.order_no = order_no;
+
+    const reCreatePatient = await insertNewDocument("patient", patient);
+    return res.status(200).send({
+      status: 200,
+      message: "Patient Recreated Successfully",
+      reCreatePatient,
+    });
   } catch (e) {
     console.log("reTestPatient", e);
     return res.status(400).send({ status: 400, message: e.message });

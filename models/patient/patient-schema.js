@@ -140,7 +140,7 @@ const patientSchema = new mongoose.Schema(
     },
     pid: {
       type: schemaType.TypeNumber,
-      unique: true,
+      // unique: true,
       // required: true,
     },
     pid_link: {
@@ -174,6 +174,10 @@ const patientSchema = new mongoose.Schema(
     },
     bar_code: {
       type: schemaType.TypeString,
+      // required: true,
+    },
+    order_no: {
+      type: schemaType.TypeNumber,
       // required: true,
     },
   },

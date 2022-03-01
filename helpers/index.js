@@ -48,7 +48,7 @@ const getFindSelectPopulateData = async (
     .populate({ path: populateQuery, select: selectQuery });
 
 const findOneAndSelect = async (modelDb, searchQuery, selectOnFindOne) =>
-  await Models[modelDb].findOne(searchQuery).select(selectOnFindOne);
+  await Models[modelDb].findOne(searchQuery).select(selectOnFindOne).lean();
 
 const getPopulated = async (modelDb, prevDocRef, populateQuery) =>
   await Models[modelDb].populate(prevDocRef, populateQuery);
