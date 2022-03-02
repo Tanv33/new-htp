@@ -4,6 +4,7 @@ const { dbx } = require("../lib");
 const fs = require("fs");
 var atob = require("atob");
 var pdf = require("html-pdf");
+const csv = require("csv-parser");
 
 const find = async (modelDb, queryObj) =>
   await Models[modelDb].find(queryObj).exec();
@@ -196,6 +197,28 @@ const todayDateFormat = () => {
   //	return Math.ceil(date.getTime()/1000)
 };
 
+const csvFileArr = (filePath) => {
+  return new Promise((resolve) => {
+    let results = [];
+    fs.createReadStream(filePath)
+      .pipe(csv())
+      .on("data", async (data) => {
+        let newObject = data;
+        let test_type = {
+          name: data?.name,
+          type: data?.type,
+        };
+        delete newObject?.name;
+        delete newObject?.type;
+        newObject = { ...data, test_type };
+        results.push(newObject);
+      })
+      .on("end", async () => {
+        resolve(results);
+      });
+  });
+};
+
 module.exports = {
   getPopulated,
   searchDocuments,
@@ -222,4 +245,5 @@ module.exports = {
   getPopulatedDataWithLimit,
   todayDateFormat,
   findOneAndSelect,
+  csvFileArr,
 };

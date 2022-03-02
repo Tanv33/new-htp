@@ -23,6 +23,10 @@ router.post(
 );
 router.delete("/delete-patient", deletePatient);
 router.post("/re-test-patient", reTestPatient);
-router.put("/update-patient/:id", updatePatient);
+router.put(
+  "/update-patient/:id",
+  upload.single("insurance_image"),
+  updatePatient
+);
 
 module.exports = router;

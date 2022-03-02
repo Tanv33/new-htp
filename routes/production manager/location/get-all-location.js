@@ -9,7 +9,12 @@ const getAllLocation = async (req, res) => {
     );
     const { production_manager_location } = allLocations[0];
     // console.log({ allLocations });
-    for (let index = 0; index < production_manager_location.length; index++) {
+    if (!production_manager_location.length) {
+      return res
+        .status(400)
+        .send({ status: 400, message: "No Location Found" });
+    }
+    for (let index = 0; index < production_manager_location?.length; index++) {
       let patients = await getCount("patient", {
         location_id: production_manager_location[index]._id,
       });
