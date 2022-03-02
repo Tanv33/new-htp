@@ -1,4 +1,4 @@
-const { updateDocument, todayDateFormat } = require("../../../helpers");
+const { updateDocument, todayDateFormat, getDropBoxLink, generateRandomNumber } = require("../../../helpers");
 const Joi = require("joi");
 
 const schema = Joi.object({
@@ -57,6 +57,16 @@ const updatePatient = async (req, res) => {
           message: "Barcode is not allowed",
         });
       }
+    }
+    if (req.file) {
+      req.body.insurance_image = await getDropBoxLink(
+        "/insurance images/" +
+          generateRandomNumber(11111, 99999) +
+          "-" +
+          req.file.filename,
+        req.file.path,
+        false
+      );
     }
     req.body.is_review = true;
     const patient_updated = await updateDocument(

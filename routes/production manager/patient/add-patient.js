@@ -24,21 +24,15 @@ const fs = require("fs");
 
 const addPatient = async (req, res) => {
   try {
-    const user = await findOne("user", { _id: req.userId });
-    const medicalProfession = await getPopulatedData(
-      "user",
-      { _id: req.userId },
-      "employee_location"
-    );
-    console.log(medicalProfession);
-    if (!medicalProfession.length) {
-      return res.status(400).send({
-        status: 400,
-        message: "There is no location created by your manager",
-      });
+    const location = await findOne("location", {
+      _id: req.params.location_id,
+    });
+    if (!location) {
+      return res
+        .status(400)
+        .send({ status: 400, message: "No Location Found" });
     }
-    const { employee_location } = medicalProfession[0];
-    const { patient_required_fields } = employee_location;
+    const { patient_required_fields } = location;
     // creating an empty object and looping values from manager required fields and inserting keys which are required values and keys values are Joi.required()
     let obj = {};
     // Array
@@ -51,16 +45,6 @@ const addPatient = async (req, res) => {
       }
     });
     obj.patient_signature = Joi.required();
-
-    //  Object
-    // for (const key in patient_required_fields) {
-    //   // console.log(key.required);
-    //   if (patient_required_fields[key].required) {
-    //     obj[key] = Joi.required();
-    //   }
-    // }
-    // obj.patient_signature = Joi.required();
-    // console.log(obj);
     if (req.body.gender === "Female") {
       obj.pregnant = Joi.required();
       if (!req.body.pregnant) {
@@ -247,7 +231,7 @@ const addPatient = async (req, res) => {
       `./public/qrcodes/${pid}.png`,
       false
     );
-    req.body.location_id = user.employee_location;
+    req.body.location_id = location._id;
     req.body.created_by = req.userId;
     req.body.patient_signature = patientSignatureLink;
     req.body.signature = signaturePdfLink;

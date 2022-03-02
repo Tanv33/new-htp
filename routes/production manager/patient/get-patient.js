@@ -1,8 +1,5 @@
 const Joi = require("joi");
-const {
-  getDataWithLimit,
-  getPopulatedDataWithLimit,
-} = require("../../../helpers");
+const { getPopulatedDataWithLimit } = require("../../../helpers");
 
 const newSchema = Joi.object({
   tested: Joi.string().required(),
@@ -22,7 +19,7 @@ const getPatient = async (req, res) => {
       "location_name",
       { _id: -1 },
       page,
-      2
+      6
     );
     return res.status(200).send({ status: 200, patients });
   } catch (e) {

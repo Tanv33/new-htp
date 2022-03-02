@@ -1,26 +1,32 @@
-const { getPopulatedData } = require("../../../helpers");
-// const requiredTemplate = require("../../public/patient required field template");
-
+const Joi = require("joi");
+const { findOne } = require("../../../helpers");
+const schema = Joi.object({
+  location_id: Joi.string().required(),
+});
 const getRequiredFields = async (req, res) => {
   try {
-    // const medicalProfession = await findOne("user", { _id: req.userId });
-    const medicalProfession = await getPopulatedData(
-      "user",
-      { _id: req.userId },
-      "type employee_location"
-    );
-    const { employee_location } = medicalProfession[0];
+    await schema.validateAsync(req.body);
+    const { location_id } = req.body;
+    const checkLocation = await findOne("user", {
+      _id: req.userId,
+      production_manager_location: { $in: [location_id] },
+    });
+    if (!checkLocation) {
+      return res
+        .status(400)
+        .send({
+          status: 400,
+          message:
+            "No Location Found With Your Id | You are Accessing other location",
+        });
+    }
+    const location = await findOne("location", {
+      _id: location_id,
+    });
     return res.status(200).send({
       status: 200,
-      employee_location,
+      location,
     });
-    // const { test, patient_required_fields } = employee_location;
-    // const template = requiredTemplate(patient_required_fields);
-    // return res.status(200).send({
-    //   status: 200,
-    //   template,
-    //   test,
-    // });
   } catch (e) {
     console.log(e);
     return res.status(400).send({ status: 400, message: e.message });
