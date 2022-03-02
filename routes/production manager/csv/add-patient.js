@@ -12,8 +12,8 @@ const addPatient = async (req, res) => {
         .status(400)
         .send({ status: 400, mesaage: "Only CSV file allowed" });
     }
-    // const resultArr = await csvFileArr(req.file.path);
-    return res.status(200).send({ status: 200, mesaage: "Not ready" });
+    const resultArr = await csvFileArr(req.file.path);
+    return res.status(200).send({ status: 200, resultArr });
   } catch (e) {
     console.log(e);
     return res.status(400).send({ status: 400, mesaage: e.message });

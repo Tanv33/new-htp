@@ -2,18 +2,17 @@ const Joi = require("joi");
 const { getPopulatedDataWithLimit } = require("../../../helpers");
 
 const newSchema = Joi.object({
-  tested: Joi.string().required(),
   page: Joi.string().required(),
 });
 const getPatient = async (req, res) => {
   try {
     await newSchema.validateAsync(req.query);
-    const { tested, page } = req.query;
+    const { page } = req.query;
     const patients = await getPopulatedDataWithLimit(
       "patient",
       {
         created_by: req.userId,
-        is_tested: tested,
+        is_tested: "Yes",
       },
       "location_id",
       "location_name",

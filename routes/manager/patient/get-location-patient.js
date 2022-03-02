@@ -6,7 +6,7 @@ const getLocationPatient = async (req, res) => {
     const { manager_location } = manager;
     let locationsPatients = await getPopulatedData(
       "patient",
-      { location_id: { $in: manager_location } },
+      { location_id: { $in: manager_location }, is_tested: "Yes" },
       "location_id",
       "location_name"
     );
