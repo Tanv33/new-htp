@@ -79,6 +79,11 @@ const userSchema = new mongoose.Schema(
       ref: "location",
       // requried: true,
     },
+    production_manager_location: {
+      type: [schemaType.TypeObjectId],
+      ref: "location",
+      // requried: true,
+    },
     employee_location: {
       type: schemaType.TypeObjectId,
       ref: "location",

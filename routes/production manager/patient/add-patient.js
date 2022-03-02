@@ -6,9 +6,12 @@ const addPatient = async (req, res) => {
         .status(400)
         .send({ status: 400, mesaage: "CSV file required" });
     }
-    const readFile = fs.readFileSync(req.file.path, "utf8");
+    // if (req.file.mimetype) {
+    // }
+    console.log(req.file);
+    // const readFile = fs.readFileSync(req.file.path, "utf8");
 
-    console.log(readFile);
+    // console.log(readFile);
     // return res.status(200).send("dada");
   } catch (e) {
     console.log(e);

@@ -266,7 +266,7 @@ const signUpUser = async (req, res, next) => {
       const { _id } = check_user_type_exist;
       req.body.production_manager_logo = await getDropBoxLink(
         "/production manager logos/" +
-          mid +
+          pmid +
           "-" +
           req.files.production_manager_logo[0].filename,
         req.files.production_manager_logo[0].path
@@ -289,7 +289,7 @@ const signUpUser = async (req, res, next) => {
       const new_user = await insertNewDocument("user", {
         full_name,
         email,
-        mid,
+        pmid,
         telephone,
         lab_name,
         lab_address,
@@ -304,7 +304,7 @@ const signUpUser = async (req, res, next) => {
         "accoutCreatedTemp",
         {
           username: full_name,
-          production_manager_logo: req.body.production_manager_logo,
+          manager_logo: req.body.production_manager_logo,
           email: email,
           telephone: telephone,
           lab_address: lab_address,
