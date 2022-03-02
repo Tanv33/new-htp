@@ -57,7 +57,9 @@ const searchPatient = async (req, res) => {
         "patient",
         {
           location_id: { $in: manager_location },
-          gender: { $regex: gender, $options: "i" },
+          gender: {
+            $regex: new RegExp("^" + gender.toLowerCase() + "$", "i"),
+          },
         },
         "location_id",
         "location_name"
