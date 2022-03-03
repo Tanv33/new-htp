@@ -9,7 +9,7 @@ const reTestPatient = require("./re-test-patient");
 const updatePatient = require("./update-patient");
 
 // ROUTES * /api/user//
-router.get("/get-required-fields", getRequiredFields);
+router.post("/get-required-fields", getRequiredFields);
 router.get("/get-patient", getPatient);
 router.post(
   "/add-patient/:location_id",
