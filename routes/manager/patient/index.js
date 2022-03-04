@@ -9,7 +9,7 @@ const updateLocationPatient = require("./update-location-patient");
 router.get("/get-form", getPatientForm);
 router.get("/get-location-patient", getLocationPatient);
 router.get("/search-patient", searchPatient);
-router.post("/update-location-patient/:id", updateLocationPatient);
+router.put("/update-location-patient/:id", updateLocationPatient);
 router.delete("/delete-location-patient", deleteLocationPatient);
 
 module.exports = router;
