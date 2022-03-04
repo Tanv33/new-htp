@@ -3,6 +3,7 @@ const { upload } = require("../../../lib");
 const router = express.Router();
 const addPatient = require("./add-patient");
 const deletePatient = require("./delete-patient");
+const getPatientForm = require("./get-form");
 const getPatient = require("./get-patient");
 const getRequiredFields = require("./get-required-fields");
 const reTestPatient = require("./re-test-patient");
@@ -28,5 +29,6 @@ router.put(
   upload.single("insurance_image"),
   updatePatient
 );
+router.get("/get-form", getPatientForm);
 
 module.exports = router;
