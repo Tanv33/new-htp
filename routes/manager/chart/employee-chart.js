@@ -9,21 +9,25 @@ const employeeChart = async (req, res) => {
     const labTechnicican = await findOne("userType", {
       type: "Lab Technician",
     });
+    const { manager_location } = manager;
     const data = await getAggregate("patient", [
-      // stage 1
-      // { $match: {} },
-
-      // stage 2
+      // {
+      //   $facet: {
+      //     location_id: [
+      //       {
+      //         $match: {
+      //           location_id: manager_location[1],
+      //         },
+      //       },
+      //       { $count: "location_id" },
+      //     ],
+      //   },
+      // },
       {
-        $group: {
-          _id: {
-            test_name: "$test_type.name",
-            test_type: "$test_type.type",
-          },
-        },
+        // $match: { $expr: { location_id: { $in: manager_location } } },
+        $count: "type",
       },
     ]);
-    const { manager_location } = manager;
     return res.status(200).send({
       status: 200,
       // medicalProfession,
