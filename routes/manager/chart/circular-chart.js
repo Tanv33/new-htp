@@ -1,22 +1,37 @@
-const { findOne, find } = require("../../../helpers");
+const { findOne, find, getAggregate } = require("../../../helpers");
 
 const circularChart = async (req, res) => {
   try {
     const manager = await findOne("user", { _id: req.userId });
     const { manager_location } = manager;
-    let arr = [];
-    const totalPatient = await find("patient", {
-      location_id: { $in: manager_location },
-    });
-    // await manager_location.map(async (element) => {
-    //   const totalPatient = await find("patient", {
-    //     location_id: element,
-    //   });
-    //   console.log(totalPatient);
-    //   arr.push(totalPatient);
-    // });
+    const totalPatient = await getAggregate("patient", [
+      {
+        $match: { location_id: { $in: manager_location } },
+      },
+      {
+        $group: {
+          _id: "$test_type.name",
+          noOfPatient: {
+            $sum: 1,
+          },
+        },
+      },
+      // {
+      //   $match: {
+      //     location_id: { $in: manager_location },
+      //   },
+      // },
+      // {
+      //   $sort: { _id: -1 },
+      // },
+      // {
+      //   $project: {
+      //     _id: 1,
+      //     first_name: 1,
+      //   },
+      // },
+    ]);
     return res.status(200).send({ status: 200, totalPatient });
-    // .send({ status: 200, manager_location });
   } catch (e) {
     console.log(e);
     return res.status(400).send({ status: 400, message: e.message });

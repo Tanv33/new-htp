@@ -7,6 +7,7 @@ const getPatientForm = require("./get-form");
 const getPatient = require("./get-patient");
 const getRequiredFields = require("./get-required-fields");
 const reTestPatient = require("./re-test-patient");
+const searchPatient = require("./search-patient");
 const updatePatient = require("./update-patient");
 
 // ROUTES * /api/user//
@@ -30,5 +31,6 @@ router.put(
   updatePatient
 );
 router.get("/get-form", getPatientForm);
+router.get("/search", searchPatient);
 
 module.exports = router;

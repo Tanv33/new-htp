@@ -17,6 +17,11 @@ const getPatientForm = async (req, res) => {
       "patient_test_result_sign_off",
       "tested_by",
       "tested_date",
+      "order_no",
+      "is_review",
+      "test_type",
+      "patient_signature",
+      "bar_code",
     ];
     for (const key in schemaObj) {
       if (!wrongValues.includes(key)) {
