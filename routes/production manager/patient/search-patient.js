@@ -5,7 +5,6 @@ const schema = Joi.object({
   last_name: Joi.string(),
   gender: Joi.string(),
   pid: Joi.number(),
-  is_tested: Joi.string(),
   name: Joi.string(),
   type: Joi.string(),
   location_name: Joi.string(),
@@ -13,16 +12,8 @@ const schema = Joi.object({
 const searchPatient = async (req, res) => {
   try {
     await schema.validateAsync(req.query);
-    const {
-      first_name,
-      last_name,
-      gender,
-      pid,
-      is_tested,
-      name,
-      type,
-      location_name,
-    } = req.query;
+    const { first_name, last_name, gender, pid, name, type, location_name } =
+      req.query;
     let queryArr = [];
     const production_manager = await findOne("user", {
       _id: req.userId,
@@ -34,6 +25,7 @@ const searchPatient = async (req, res) => {
         {
           location_id: { $in: production_manager_location },
           first_name: { $regex: first_name, $options: "i" },
+          is_tested: "Yes",
         },
         "location_id",
         "location_name"
@@ -46,6 +38,7 @@ const searchPatient = async (req, res) => {
         {
           location_id: { $in: production_manager_location },
           last_name: { $regex: last_name, $options: "i" },
+          is_tested: "Yes",
         },
         "location_id",
         "location_name"
@@ -60,6 +53,7 @@ const searchPatient = async (req, res) => {
           gender: {
             $regex: new RegExp("^" + gender.toLowerCase() + "$", "i"),
           },
+          is_tested: "Yes",
         },
         "location_id",
         "location_name"
@@ -72,30 +66,7 @@ const searchPatient = async (req, res) => {
         {
           location_id: { $in: production_manager_location },
           pid,
-        },
-        "location_id",
-        "location_name"
-      );
-      return res.status(200).send({ status: 200, queryArr });
-    }
-    if (is_tested === "Yes") {
-      queryArr = await getPopulatedData(
-        "patient",
-        {
-          location_id: { $in: production_manager_location },
-          is_tested,
-        },
-        "location_id",
-        "location_name"
-      );
-      return res.status(200).send({ status: 200, queryArr });
-    }
-    if (is_tested === "No") {
-      queryArr = await getPopulatedData(
-        "patient",
-        {
-          location_id: { $in: production_manager_location },
-          is_tested,
+          is_tested: "Yes",
         },
         "location_id",
         "location_name"
@@ -108,6 +79,7 @@ const searchPatient = async (req, res) => {
         {
           location_id: { $in: production_manager_location },
           "test_type.name": { $regex: name, $options: "i" },
+          is_tested: "Yes",
         },
         "location_id",
         "location_name"
@@ -120,6 +92,7 @@ const searchPatient = async (req, res) => {
         {
           location_id: { $in: production_manager_location },
           "test_type.type": { $regex: type, $options: "i" },
+          is_tested: "Yes",
         },
         "location_id",
         "location_name"
@@ -137,6 +110,7 @@ const searchPatient = async (req, res) => {
         "patient",
         {
           location_id: { $in: filterArrId },
+          is_tested: "Yes",
         },
         "location_id",
         "location_name"
