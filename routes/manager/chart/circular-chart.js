@@ -8,26 +8,28 @@ const circularChart = async (req, res) => {
       {
         $match: { location_id: { $in: manager_location } },
       },
+      // {
+      //   $project: {
+      //     test_type: 1,
+      //   },
+      // },
       {
         $group: {
           _id: "$test_type.name",
           noOfPatient: {
             $sum: 1,
           },
+          // types: {
+          //   $push: "$test_type.type",
+          // },
         },
       },
       // {
-      //   $match: {
-      //     location_id: { $in: manager_location },
-      //   },
-      // },
-      // {
-      //   $sort: { _id: -1 },
-      // },
-      // {
       //   $project: {
-      //     _id: 1,
-      //     first_name: 1,
+      //     // first_name: 1,
+      //     _id: 0,
+      //     "test_type.name": 1,
+      //     "test_type.type": 1,
       //   },
       // },
     ]);

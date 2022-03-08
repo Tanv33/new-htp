@@ -1,4 +1,4 @@
-const { findOne, find, getAggregate } = require("../../../helpers");
+const { findOne, getCount } = require("../../../helpers");
 
 const employeeChart = async (req, res) => {
   try {
@@ -9,33 +9,24 @@ const employeeChart = async (req, res) => {
     const labTechnicican = await findOne("userType", {
       type: "Lab Technician",
     });
+    let employeeChartArr = [];
     const { manager_location } = manager;
-    const data = await getAggregate("patient", [
-      // {
-      //   $facet: {
-      //     location_id: [
-      //       {
-      //         $match: {
-      //           location_id: manager_location[1],
-      //         },
-      //       },
-      //       { $count: "location_id" },
-      //     ],
-      //   },
-      // },
-      {
-        // $match: { $expr: { location_id: { $in: manager_location } } },
-        $count: "type",
-      },
-    ]);
-    return res.status(200).send({
-      status: 200,
-      // medicalProfession,
-      // manager_location,
-      // labTechnicican,
-      data,
-      adad: data.length,
-    });
+    for (let i = 0; i < manager_location.length; i++) {
+      const noOfLabTechnician = await getCount("user", {
+        employee_location: manager_location[i],
+        type: labTechnicican._id,
+      });
+      const noOfMedicalProfession = await getCount("user", {
+        employee_location: manager_location[i],
+        type: medicalProfession._id,
+      });
+      let obj = {};
+      obj.location = manager_location[i];
+      obj.medicalProfession = noOfMedicalProfession;
+      obj.labTechnicican = noOfLabTechnician;
+      employeeChartArr.push(obj);
+    }
+    return res.status(200).send({ status: 200, employeeChartArr });
   } catch (e) {
     console.log(e);
     return res.status(400).send({ status: 400, message: e.message });

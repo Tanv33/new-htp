@@ -57,7 +57,7 @@ const getPopulated = async (modelDb, prevDocRef, populateQuery) =>
 const getAggregate = async (modelDb, aggregateQuery) =>
   await Models[modelDb].aggregate(aggregateQuery);
 const getCount = async (modelDb, aggregateQuery) =>
-  await Models[modelDb].count(aggregateQuery);
+  await Models[modelDb].find(aggregateQuery).count();
 
 const deleteDocument = async (modelDb, deleteQuery) =>
   await Models[modelDb].deleteOne(deleteQuery);
