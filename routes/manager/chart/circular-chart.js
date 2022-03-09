@@ -14,14 +14,29 @@ const circularChart = async (req, res) => {
       //   },
       // },
       {
-        $group: {
-          _id: "$test_type.name",
-          noOfPatient: {
-            $sum: 1,
-          },
-          // types: {
-          //   $push: "$test_type.type",
-          // },
+        // $group: {
+        //   _id: "$test_type.type",
+        //   count: {
+        //     $sum: 1,
+        //   },
+
+          $group: {
+            _id: "$test_type.name",
+            noOfPatient: {
+              $sum: 1,
+            },
+            // arr: {
+            //   $push: "$test_type.type",
+            // },
+            // object: {
+            //   $mergeObjects: { name: "$test_type.type" },
+            // },
+            // types: {
+            //   $addToSet: "$test_type.type",
+            // },
+            // sum: {
+            //   $sum: "$test_type.type",
+            // },
         },
       },
       // {
