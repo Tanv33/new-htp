@@ -9,12 +9,14 @@ const reTestPatient = require("./re-test-patient");
 const updatePatient = require("./update-patient");
 const getCollectedPatient = require("./get-collected-patient");
 const getRapidPatient = require("./get-rapid-patient");
+const getAllTestedPatient = require("./get-tested-patient");
 
 // ROUTES * /api/user//
 router.get("/get-required-fields", getRequiredFields);
 router.get("/get-uncollected-patient", getUnCollectedPatient);
 router.get("/get-collected-patient", getCollectedPatient);
 router.get("/get-rapid-patient", getRapidPatient);
+router.get("/get-tested-patient", getAllTestedPatient);
 router.post(
   "/add-patient",
   upload.fields([
