@@ -17,6 +17,7 @@ const getPatient = async (req, res) => {
       {
         created_by: req.userId,
         is_tested: tested,
+        "test_type.type": { $ne: "Rapid" },
       },
       "location_id",
       "location_name",

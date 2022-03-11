@@ -136,10 +136,10 @@ const patientSchema = new mongoose.Schema(
     test_type: {
       type: Object,
       // ref: "test-types",
-      required: true,
+      // required: true,
     },
     pid: {
-      type: schemaType.TypeNumber,
+      type: schemaType.TypeString,
       // unique: true,
       // required: true,
     },
@@ -181,6 +181,11 @@ const patientSchema = new mongoose.Schema(
       // required: true,
     },
     is_review: {
+      type: schemaType.TypeBoolean,
+      default: false,
+      // required: true,
+    },
+    production: {
       type: schemaType.TypeBoolean,
       default: false,
       // required: true,

@@ -1,8 +1,8 @@
 const express = require("express");
 const { upload } = require("../../../lib");
 const router = express.Router();
-const addPatient = require("./add-patient");
+const uploadCsv = require("./upload-csv");
 
-router.post("/add-patient",upload.single("csv"), addPatient);
+router.post("/upload-csv", upload.single("csv"), uploadCsv);
 
 module.exports = router;

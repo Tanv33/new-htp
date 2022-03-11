@@ -203,15 +203,16 @@ const csvFileArr = (filePath) => {
     fs.createReadStream(filePath)
       .pipe(csv())
       .on("data", async (data) => {
-        let newObject = data;
-        let test_type = {
-          name: data?.name,
-          type: data?.type,
-        };
-        delete newObject?.name;
-        delete newObject?.type;
-        newObject = { ...data, test_type };
-        results.push(newObject);
+        // let newObject = data;
+        // let test_type = {
+        //   name: data?.name,
+        //   type: data?.type,
+        // };
+        // delete newObject?.name;
+        // delete newObject?.type;
+        // newObject = { ...data, test_type };
+        // results.push(newObject);
+        results.push(data);
       })
       .on("end", async () => {
         resolve(results);

@@ -10,7 +10,7 @@ const {
   dateFormat,
 } = require("../../helpers");
 const reTestSchema = Joi.object({
-  pid: Joi.number().required(),
+  pid: Joi.string().required(),
   // patient_signature: Joi.string().required(),
   test_type: Joi.object()
     .keys({

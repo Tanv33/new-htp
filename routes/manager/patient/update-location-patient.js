@@ -27,7 +27,7 @@ const schema = Joi.object({
   ssn: Joi.string(),
   is_tested: Joi.string(),
   test_type: Joi.object(),
-  pid: Joi.number(),
+  pid: Joi.string(),
   bar_code: Joi.string(),
 });
 

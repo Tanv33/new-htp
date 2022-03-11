@@ -3,7 +3,7 @@ const { findOne, getPopulatedData, find } = require("../../../helpers");
 const schema = Joi.object({
   first_name: Joi.string(),
   last_name: Joi.string(),
-  pid: Joi.number(),
+  pid: Joi.string(),
   order_no: Joi.number(),
   email: Joi.string().email(),
   telephone: Joi.string(),

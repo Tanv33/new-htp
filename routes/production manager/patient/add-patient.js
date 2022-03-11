@@ -215,7 +215,7 @@ const addPatient = async (req, res) => {
     );
     const value = numberDoc.value;
     const sequenceNumber = (value + "").padStart(4, "0");
-    const pid = dateFormat() + sequenceNumber;
+    const pid = "pid-" + sequenceNumber;
     const orderNoDoc = await findOneAndUpdate(
       "NumberGeneratorModel",
       { name: "pid" },

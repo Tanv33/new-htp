@@ -4,7 +4,7 @@ const schema = Joi.object({
   first_name: Joi.string(),
   last_name: Joi.string(),
   gender: Joi.string(),
-  pid: Joi.number(),
+  pid: Joi.string(),
   is_tested: Joi.string(),
   name: Joi.string(),
   type: Joi.string(),
