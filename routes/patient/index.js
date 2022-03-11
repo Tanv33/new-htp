@@ -3,14 +3,18 @@ const { upload } = require("../../lib");
 const router = express.Router();
 const addPatient = require("./add-patient");
 const deletePatient = require("./delete-patient");
-const getPatient = require("./get-patient");
+const getUnCollectedPatient = require("./get-uncollected-patient");
 const getRequiredFields = require("./get-required-fields");
 const reTestPatient = require("./re-test-patient");
 const updatePatient = require("./update-patient");
+const getCollectedPatient = require("./get-collected-patient");
+const getRapidPatient = require("./get-rapid-patient");
 
 // ROUTES * /api/user//
 router.get("/get-required-fields", getRequiredFields);
-router.get("/get-patient", getPatient);
+router.get("/get-uncollected-patient", getUnCollectedPatient);
+router.get("/get-collected-patient", getCollectedPatient);
+router.get("/get-rapid-patient", getRapidPatient);
 router.post(
   "/add-patient",
   upload.fields([
