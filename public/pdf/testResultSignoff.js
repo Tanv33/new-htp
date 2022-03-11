@@ -1,4 +1,4 @@
-const testResultSignOff = (fullname, location, number, data, signature, desc) => {
+const testResultSignOff = (currentPatient, patient_result) => {
   return ` <!DOCTYPE HTML
         PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
       <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
@@ -192,7 +192,11 @@ const testResultSignOff = (fullname, location, number, data, signature, desc) =>
       
       
                                       <p style="font-size: 14px; line-height: 110%;">
-                                        I, ${fullname}, certify that I am indeed the person coinciding with the COVID-19 test and
+                                        I, ${
+                                          currentPatient.first_name +
+                                          " " +
+                                          currentPatient?.last_name
+                                        }, certify that I am indeed the person coinciding with the COVID-19 test and
                                         corresponding results to follow.
                                       </p>
       
@@ -238,21 +242,23 @@ const testResultSignOff = (fullname, location, number, data, signature, desc) =>
       
                                     <div style="color: #2f3440; line-height: 140%; text-align: left; word-wrap: break-word;">
                                       <p style="font-size: 14px; line-height: 140%; text-align: left;"><strong>Located
-                                          at:</strong> ${desc}</p>
+                                          at:</strong>${patient_result}</p>
       
                                           <p style="font-size: 14px; line-height: 140%; text-align: left;"><strong>Signed Date
-                                          </strong>:${data}</p>
+                                          </strong>:${currentPatient?.telephone}</p>
       
                                       <p style="font-size: 14px; line-height: 140%; text-align: left;"><strong>Phone
-                                          Number</strong>:${number}</p>
+                                          Number</strong>:${
+                                            currentPatient?.telephone
+                                          }</p>
                                       <p style="font-size: 14px; line-height: 140%; text-align: left;"><strong>Patient's
                                           Signature
                                         </strong>:</p>
       
                                       <div
                                         Style="width: 100%; height: 200px; border-radius: 13px; border: 1px solid #C3C3C7;">
-                                        <img src="data:image/png;base64,${signature?.toString(
-                                          'base64'
+                                        <img src="data:image/png;base64,${currentPatient?.patient_signature?.toString(
+                                          "base64"
                                         )}" width="200px" height="100%" />
                                       </div>
       

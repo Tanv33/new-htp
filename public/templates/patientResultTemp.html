@@ -100,6 +100,22 @@
             color: inherit !important;
             text-decoration: none !important;
         }
+        .imgParent {
+            background-image: url("https://www.dropbox.com/s/gv8v5zr4xt7ceb9/Email-banner.png?raw=1");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            height: 28vh;
+            padding-right: 0px;
+            padding-left: 0px;
+        }
+
+        .second_img {
+            height: 50% !important;
+            width: 40% !important;
+            margin-top: 70px;
+            margin-left: 20px;
+        }
     </style>
 
 
@@ -145,16 +161,20 @@
                                                             <table width="100%" cellpadding="0" cellspacing="0"
                                                                 border="0">
                                                                 <tr>
-                                                                    <td style="padding-right: 0px;padding-left: 0px;"
-                                                                        align="center">
-
-                                                                        <img align="center" border="0"
-                                                                            src="https://s3.amazonaws.com/unroll-images-production/projects%2F37348%2F1631703452455-Email-banner%402x.png"
-                                                                            alt="" title=""
-                                                                            style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 600px;"
-                                                                            width="600" />
-
+                                                                    <td style="overflow-wrap:break-word;word-break:break-word;padding:0px;font-family:helvetica,sans-serif;"
+                                                            align="left">
+                                                            <table width="100%" cellpadding="0" cellspacing="0"
+                                                                border="0">
+                                                                <tr>
+                                                                    <td class="imgParent">
+                                                                        <img class="second_img" src={{location_logo}}
+                                                                            alt="manager">
                                                                     </td>
+                                                                </tr>
+                                                            </table>
+
+                                                        </td>
+            
                                                                 </tr>
                                                             </table>
 
@@ -204,7 +224,7 @@
                                                                 <p style="font-size: 14px; line-height: 140%;">
                                                                     <strong><span
                                                                             style="font-size: 26px; line-height: 36.4px;">Hi
-                                                                            [fullname]!</span></strong>
+                                                                            {{fullName}}!</span></strong>
                                                                 </p>
                                                             </div>
 
@@ -255,8 +275,8 @@
                                                                     style="line-height: 200%; text-align: center; font-size: 14px;">
                                                                     <span
                                                                         style="font-size: 16px; line-height: 32px;">You
-                                                                        recently took [testename] Lab Test for COVID-19
-                                                                        at our [test location].</span>
+                                                                        recently took {{testName}} Lab Test for COVID-19
+                                                                        at our {{testLocation}}.</span>
                                                                 </p>
                                                                 <p
                                                                     style="line-height: 200%; font-size: 14px; text-align: center;">

@@ -190,6 +190,12 @@ const patientSchema = new mongoose.Schema(
       default: false,
       // required: true,
     },
+    patient_result: {
+      type: schemaType.TypeString,
+    },
+    patient_result_date: {
+      type: schemaType.TypeDate,
+    },
   },
   { timestamps: true }
 );

@@ -42,6 +42,7 @@ const updatePatient = async (req, res) => {
     const { is_tested, bar_code } = req.body;
     if (is_tested === "Yes") {
       req.body.tested_date = todayDateFormat();
+      req.body.patient_result = "Pending";
       if (!bar_code) {
         return res.status(400).send({
           status: 400,
