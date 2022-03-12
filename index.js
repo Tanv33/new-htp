@@ -30,13 +30,16 @@ app.use(morgan("short"));
 
 const server = createServer(app);
 const io = new Server(server, { cors: { origin: "*", methods: "*" } });
-// const socketInstance = io;
-// module.exports = { socketInstance: io };
+
 // * Api routes
 app.use("/api", routes);
 
 app.get("/", (req, res) => {
   console.log("hello");
+  console.log(io);
+  io.emit("csv", {
+    message: "100% Done",
+  });
 });
 
 app.use("*", (req, res) => {
