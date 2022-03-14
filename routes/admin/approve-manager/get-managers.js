@@ -1,5 +1,4 @@
 const { findOne, find, getPopulatedData } = require("../../../helpers");
-const { ObjectID } = require("../../../types");
 
 const getManagers = async (req, res) => {
   try {

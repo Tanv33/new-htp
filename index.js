@@ -37,9 +37,9 @@ app.use("/api", routes);
 app.get("/", (req, res) => {
   console.log("hello");
   console.log(io);
-  io.emit("csv", {
-    message: "100% Done",
-  });
+  // io.emit("csv", {
+  //   message: "100% Done",
+  // });
 });
 
 app.use("*", (req, res) => {

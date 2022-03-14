@@ -54,7 +54,7 @@ const createLocation = async (req, res) => {
       );
       await fs.unlinkSync(req.file.path);
     }
-
+    req.body.created_by = req.userId;
     const locationCreated = await insertNewDocument("location", req.body);
     const { _id } = locationCreated;
     console.log({ locationCreated });

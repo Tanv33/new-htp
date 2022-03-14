@@ -64,6 +64,10 @@ const locationSchema = new mongoose.Schema(
     location_last_name: {
       type: schemaType.TypeString,
     },
+    created_by: {
+      type: schemaType.ObjectID,
+      ref: "user",
+    },
   },
   { timestamps: true }
 );
