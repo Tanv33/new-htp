@@ -36,7 +36,7 @@ app.use("/api", routes);
 
 app.get("/", (req, res) => {
   console.log("hello");
-  console.log(io);
+  // console.log(io);
   // io.emit("csv", {
   //   message: "100% Done",
   // });
