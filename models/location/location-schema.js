@@ -68,6 +68,10 @@ const locationSchema = new mongoose.Schema(
       type: schemaType.ObjectID,
       ref: "user",
     },
+    user_type: {
+      type: schemaType.ObjectID,
+      ref: "user-types",
+    },
   },
   { timestamps: true }
 );
