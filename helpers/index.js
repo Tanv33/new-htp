@@ -15,7 +15,7 @@ const findOneAndUpdate = async (modelDb, findObj, update, option) =>
 const searchDocuments = async (modelDb, queryObj) =>
   await Models[modelDb].find(queryObj).exec();
 const updateDocument = async (modelDb, updateQuery, setQuery) => {
-  return Models[modelDb].updateMany(updateQuery, { $set: setQuery });
+  return Models[modelDb].updateOne(updateQuery, { $set: setQuery });
 };
 const findOneSort = async (modelDb, queryObj) =>
   await Models[modelDb]?.findOne(queryObj).sort({ _id: -1 }).exec();
