@@ -35,6 +35,10 @@ const schema = Joi.object({
 const createLocation = async (req, res) => {
   try {
     await schema.validateAsync(req.body);
+    const production_manager = await findOne("userType", {
+      type: "Production Manager",
+    });
+
     // res.send(req.body);
 
     if (!req.body.location_logo) {
@@ -55,6 +59,7 @@ const createLocation = async (req, res) => {
       await fs.unlinkSync(req.file.path);
     }
     req.body.created_by = req.userId;
+    req.body.user_type = production_manager?._id;
     const locationCreated = await insertNewDocument("location", req.body);
     const { _id } = locationCreated;
     console.log({ locationCreated });

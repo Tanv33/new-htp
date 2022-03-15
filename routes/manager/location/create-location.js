@@ -3,6 +3,7 @@ const {
   pushIfNotExists,
   getDropBoxLink,
   generateRandomNumber,
+  findOne,
 } = require("../../../helpers");
 const Joi = require("joi");
 const fs = require("fs");
@@ -36,7 +37,7 @@ const createLocation = async (req, res) => {
   try {
     await schema.validateAsync(req.body);
     // res.send(req.body);
-
+    const manager = await findOne("userType", { type: "Manager" });
     if (!req.body.location_logo) {
       if (!req.file) {
         return res
@@ -55,6 +56,7 @@ const createLocation = async (req, res) => {
       await fs.unlinkSync(req.file.path);
     }
     req.body.created_by = req.userId;
+    req.body.user_type = manager?._id;
     const locationCreated = await insertNewDocument("location", req.body);
     const { _id } = locationCreated;
     console.log({ locationCreated });
