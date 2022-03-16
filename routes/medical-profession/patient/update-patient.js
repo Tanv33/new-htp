@@ -3,7 +3,7 @@ const {
   todayDateFormat,
   getDropBoxLink,
   generateRandomNumber,
-} = require("../../helpers");
+} = require("../../../helpers");
 const Joi = require("joi");
 
 const schema = Joi.object({

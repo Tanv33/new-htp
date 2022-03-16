@@ -1,4 +1,4 @@
-const { deleteDocument } = require("../../helpers");
+const { deleteDocument } = require("../../../helpers");
 const Joi = require("joi");
 
 const schema = Joi.object({

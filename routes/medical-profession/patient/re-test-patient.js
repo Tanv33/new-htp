@@ -8,7 +8,7 @@ const {
   insertNewDocument,
   findOneAndUpdate,
   dateFormat,
-} = require("../../helpers");
+} = require("../../../helpers");
 const reTestSchema = Joi.object({
   pid: Joi.string().required(),
   // patient_signature: Joi.string().required(),

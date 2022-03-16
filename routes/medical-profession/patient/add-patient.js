@@ -11,10 +11,10 @@ const {
   base64regex,
   dateFormat,
   findOneAndUpdate,
-} = require("../../helpers");
-const { send_email } = require("../../lib");
-const signatureHtml = require("../../public/pdf/Singnature");
-const consentHtml = require("../../public/pdf/tetindConsent");
+} = require("../../../helpers");
+const { send_email } = require("../../../lib");
+const signatureHtml = require("../../../public/pdf/Singnature");
+const consentHtml = require("../../../public/pdf/tetindConsent");
 const fs = require("fs");
 
 // let testItems = Joi.object().keys({

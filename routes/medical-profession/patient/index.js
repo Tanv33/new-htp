@@ -1,5 +1,5 @@
 const express = require("express");
-const { upload } = require("../../lib");
+const { upload } = require("../../../lib");
 const router = express.Router();
 const addPatient = require("./add-patient");
 const deletePatient = require("./delete-patient");

@@ -7,9 +7,9 @@ const {
   generateRandomNumber,
   getDropBoxLink,
   findOneAndPopulate,
-} = require("../../helpers");
-const { send_email } = require("../../lib");
-const testResultSignOff = require("../../public/pdf/testResultSignoff");
+} = require("../../../helpers");
+const { send_email } = require("../../../lib");
+const testResultSignOff = require("../../../public/pdf/testResultSignoff");
 
 const newSchema = Joi.object({
   order_no: Joi.number().required(),

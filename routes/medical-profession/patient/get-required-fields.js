@@ -1,4 +1,4 @@
-const { getPopulatedData } = require("../../helpers");
+const { getPopulatedData } = require("../../../helpers");
 // const requiredTemplate = require("../../public/patient required field template");
 
 const getRequiredFields = async (req, res) => {

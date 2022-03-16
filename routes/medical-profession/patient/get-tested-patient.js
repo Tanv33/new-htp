@@ -1,10 +1,10 @@
 const Joi = require("joi");
-const { getPopulatedDataWithLimit } = require("../../helpers");
+const { getPopulatedDataWithLimit } = require("../../../helpers");
 
 const newSchema = Joi.object({
   page: Joi.string().required(),
 });
-const getCollectedPatient = async (req, res) => {
+const getAllTestedPatient = async (req, res) => {
   try {
     await newSchema.validateAsync(req.query);
     const { page } = req.query;
@@ -13,7 +13,6 @@ const getCollectedPatient = async (req, res) => {
       {
         created_by: req.userId,
         is_tested: "Yes",
-        "test_type.type": { $ne: "Rapid" },
       },
       "location_id",
       "location_name",
@@ -27,4 +26,4 @@ const getCollectedPatient = async (req, res) => {
   }
 };
 
-module.exports = getCollectedPatient;
+module.exports = getAllTestedPatient;
