@@ -38,6 +38,12 @@ const addPatient = async (req, res) => {
       });
     }
     const { employee_location } = medicalProfession[0];
+    // console.log(employee_location);
+    if (!employee_location) {
+      return res
+        .status(404)
+        .send({ status: 404, message: "Sorry No Location Found" });
+    }
     const { patient_required_fields } = employee_location;
     // creating an empty object and looping values from manager required fields and inserting keys which are required values and keys values are Joi.required()
     let obj = {};

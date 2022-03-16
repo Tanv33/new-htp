@@ -10,6 +10,12 @@ const getRequiredFields = async (req, res) => {
       "type employee_location"
     );
     const { employee_location } = medicalProfession[0];
+    // console.log(employee_location);
+    if (!employee_location) {
+      return res
+        .status(404)
+        .send({ status: 404, message: "No Required Field Found" });
+    }
     return res.status(200).send({
       status: 200,
       employee_location,
