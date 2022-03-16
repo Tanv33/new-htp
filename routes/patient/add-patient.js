@@ -50,7 +50,7 @@ const addPatient = async (req, res) => {
     // Array
     // console.log({ patient_required_fields });
     patient_required_fields.map((item) => {
-      if (item?.required) {
+      if (item?.required === "true" || item?.required === true) {
         obj[item?.field] = Joi.string().required();
       } else {
         obj[item?.field] = Joi.string();
