@@ -25,15 +25,15 @@ router.use("/employee", tokenVerification, mpVerification, employee);
 router.use("/admin", tokenVerification, adminVerification, admin);
 router.use("/manager", tokenVerification, managerVerification, manager);
 router.use("/public", public);
-router.post("/rough", upload.single("logo"), (req, res) => {
-  console.log(req.body);
-  return res.status(200).send(req.body);
-});
 router.use(
   "/production-manager",
   tokenVerification,
   prodcutionManagerVerification,
   productionManager
 );
+router.post("/rough", upload.single("logo"), (req, res) => {
+  console.log(req.body);
+  return res.status(200).send(req.body);
+});
 
 module.exports = router;

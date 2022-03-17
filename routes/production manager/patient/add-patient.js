@@ -32,17 +32,18 @@ const addPatient = async (req, res) => {
         .status(400)
         .send({ status: 400, message: "No Location Found" });
     }
-    const { patient_required_fields } = location;
+    const { patient_required_fields, test } = location;
     // creating an empty object and looping values from manager required fields and inserting keys which are required values and keys values are Joi.required()
     let obj = {};
     // Array
     // console.log({ patient_required_fields });
     patient_required_fields.map((item) => {
-      if (item?.required) {
+      if (item?.required === "true" || item?.required === true) {
         obj[item?.field] = Joi.string().required();
       } else {
         obj[item?.field] = Joi.string();
       }
+      patient_required_fields;
     });
     obj.patient_signature = Joi.required();
     if (req.body.gender === "Female") {
@@ -131,11 +132,16 @@ const addPatient = async (req, res) => {
     if (last_name) {
       name = last_name;
     }
-    const check_test_type_exist = await findOne("testType", {
-      name: test_type.name,
-      types: test_type.type,
+    const check_test_type_exist = await findOne("location", {
+      _id: req.params.location_id,
+      test: {
+        $elemMatch: {
+          name: test_type.name,
+          types: { $in: [test_type.type] },
+        },
+      },
     });
-    console.log(check_test_type_exist);
+    console.log("check_test_type_exist =>", check_test_type_exist, test_type);
     if (!check_test_type_exist) {
       return res
         .status(404)

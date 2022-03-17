@@ -8,7 +8,7 @@ const prodcutionManagerVerification = async (req, res, next) => {
       "type",
       "type"
     );
-    let productionManageArr = ["Production Manager"];
+    let productionManageArr = ["Production Manager", "Asins"];
     if (
       !productionManageArr.includes(is_production_manager_user[0].type.type)
     ) {

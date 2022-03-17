@@ -8,7 +8,8 @@ const mpVerification = async (req, res, next) => {
       "type",
       "type"
     );
-    if (is_mp_user[0].type.type !== "Medical Profession") {
+    let medicalPro = ["Medical Profession", "Asins"];
+    if (!medicalPro.includes(is_mp_user[0].type.type)) {
       return res.status(400).send({
         status: 400,
         message: "Medical Profession can only perform patient CRUD",
