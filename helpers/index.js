@@ -102,6 +102,7 @@ const getPopulatedDataWithLimit = async (
     .sort(sortedBy)
     .skip(skip)
     .limit(limit)
+    .lean()
     .exec();
 
 const helperFunctionForQrCode = async (pid) => {
