@@ -59,8 +59,11 @@ const getFindSelectPopulateData = async (
     .select(selectOnFind)
     .populate({ path: populateQuery, select: selectQuery });
 
-const findOneAndSelect = async (modelDb, searchQuery, selectOnFindOne) =>
+const findOneAndSelect = async (modelDb, searchQuery, selectOnFind) =>
   await Models[modelDb].findOne(searchQuery).select(selectOnFindOne).lean();
+
+const findAndSelect = async (modelDb, searchQuery, selectOnFind) =>
+  await Models[modelDb].find(searchQuery).select(selectOnFind).lean();
 
 const getPopulated = async (modelDb, prevDocRef, populateQuery) =>
   await Models[modelDb].populate(prevDocRef, populateQuery);
@@ -259,4 +262,5 @@ module.exports = {
   findOneAndSelect,
   csvFileArr,
   findOneAndPopulate,
+  findAndSelect,
 };
