@@ -124,6 +124,12 @@ const loginUser = async (req, res) => {
           message: "Verification code send Successfully",
         });
       }
+      // For Vendor
+      if (user.type.type === "Vendor") {
+        const token = jwt.sign({ user }, SECRET);
+        console.log(user);
+        return res.status(200).send({ status: 200, user, token });
+      }
       // Matching type and mid with manager
       const findManagerId = await findOne("userType", { type: "Manager" });
       const { _id } = findManagerId;

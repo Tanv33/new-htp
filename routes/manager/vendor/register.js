@@ -16,8 +16,8 @@ const vendorSchema = Joi.object({
 const createVendor = async (req, res) => {
   try {
     // For Vendor
-    const { type, email, password } = req.body;
     await vendorSchema.validateAsync(req.body);
+    const { type, email, password } = req.body;
     // manager
     const manager = await findOne("user", { _id: req.userId });
     const { mid } = manager;
