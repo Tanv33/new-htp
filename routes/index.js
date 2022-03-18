@@ -15,6 +15,7 @@ const employee = require("./employee");
 const manager = require("./manager");
 const public = require("./public");
 const productionManager = require("./production manager");
+const vendor = require("./vendor");
 const { upload } = require("../lib");
 
 // AUTH Routes * /api/auth/*
@@ -24,6 +25,7 @@ router.use("/test", tokenVerification, test_Type);
 router.use("/employee", tokenVerification, mpVerification, employee);
 router.use("/admin", tokenVerification, adminVerification, admin);
 router.use("/manager", tokenVerification, managerVerification, manager);
+router.use("/vendor", tokenVerification, vendor);
 router.use("/public", public);
 router.use(
   "/production-manager",
