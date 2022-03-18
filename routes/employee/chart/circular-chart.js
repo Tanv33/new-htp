@@ -1,10 +1,11 @@
 const { getAggregate } = require("../../../helpers");
+const { ObjectID } = require("../../../types");
 
-const circularChart = async(req, res) => {
+const circularChart = async (req, res) => {
   try {
     const totalPatient = await getAggregate("patient", [
       {
-        $match: { created_by: req.userId },
+        $match: { created_by: ObjectID(req.userId) },
       },
       {
         $group: {

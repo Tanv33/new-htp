@@ -1,5 +1,5 @@
 const Joi = require("joi");
-const { getPopulatedDataWithLimit } = require("../../../helpers");
+const { getPopulatedDataWithLimit, getCount } = require("../../../helpers");
 
 const newSchema = Joi.object({
   page: Joi.string().required(),
@@ -20,7 +20,11 @@ const getAllTestedPatient = async (req, res) => {
       page,
       6
     );
-    return res.status(200).send({ status: 200, patients });
+    const length = await getCount("patient", {
+      created_by: req.userId,
+      is_tested: "Yes",
+    });
+    return res.status(200).send({ status: 200, length, patients });
   } catch (e) {
     res.status(400).send({ status: 400, message: e.message });
   }
