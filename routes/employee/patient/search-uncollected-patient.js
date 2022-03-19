@@ -11,7 +11,7 @@ const schema = Joi.object({
   bar_code: Joi.string(),
   type: Joi.string(),
 });
-const searchCollected = async (req, res) => {
+const searchUnCollected = async (req, res) => {
   try {
     await schema.validateAsync(req.query);
     const {
@@ -149,4 +149,4 @@ const searchCollected = async (req, res) => {
   }
 };
 
-module.exports = searchCollected;
+module.exports = searchUnCollected;
