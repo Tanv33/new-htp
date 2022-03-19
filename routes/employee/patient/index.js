@@ -16,6 +16,7 @@ const searchPatient = require("./search-collected-patient");
 const searchCollected = require("./search-collected-patient");
 const searchUnCollected = require("./search-uncollected-patient");
 const searchRapidPatient = require("./search-rapid-patient");
+const searchTested = require("./search-tested-patient");
 
 // ROUTES * /api/user//
 router.get("/get-required-fields", getRequiredFields);
@@ -45,5 +46,6 @@ router.post("/send-email", sendPdfToPatient);
 router.get("/search-collected", searchCollected);
 router.get("/search-uncollected", searchUnCollected);
 router.get("/search-rapid", searchRapidPatient);
+router.get("/search-tested", searchTested);
 
 module.exports = router;
