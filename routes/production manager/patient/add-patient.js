@@ -246,7 +246,7 @@ const addPatient = async (req, res) => {
     req.body.order_no = order_no;
     req.body.pid_link = qrcodeLink;
     req.body.test_type = test_type;
-    // req.body.production = true;
+    req.body.production = true;
     // req.body.tested_by = check_tested_user_exist._id;
     const patient_created = await insertNewDocument("patient", req.body);
 
