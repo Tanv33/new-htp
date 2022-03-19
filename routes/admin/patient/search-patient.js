@@ -1,5 +1,5 @@
 const Joi = require("joi");
-const { getPopulatedData } = require("../../../helpers");
+const { getPopulatedData, findOne } = require("../../../helpers");
 
 const schema = Joi.object({
   first_name: Joi.string(),
@@ -8,10 +8,10 @@ const schema = Joi.object({
   telephone: Joi.string(),
   pid: Joi.string(),
   order_no: Joi.number(),
-  bar_code: Joi.string(),
   type: Joi.string(),
+  location_name: Joi.string(),
 });
-const searchCollected = async (req, res) => {
+const searchAllPatient = async (req, res) => {
   try {
     await schema.validateAsync(req.query);
     const {
@@ -21,10 +21,9 @@ const searchCollected = async (req, res) => {
       telephone,
       pid,
       order_no,
-      bar_code,
       type,
+      location_name,
     } = req.query;
-
     if (first_name) {
       const searchPatient = await getPopulatedData(
         "patient",
@@ -32,9 +31,7 @@ const searchCollected = async (req, res) => {
           first_name: {
             $regex: new RegExp("^" + first_name + "$", "i"),
           },
-          created_by: req.userId,
-          is_tested: "Yes",
-          "test_type.type": { $ne: "Rapid" },
+          production: false,
         },
         "location_id",
         "location_name"
@@ -48,9 +45,7 @@ const searchCollected = async (req, res) => {
           last_name: {
             $regex: new RegExp("^" + last_name + "$", "i"),
           },
-          created_by: req.userId,
-          is_tested: "Yes",
-          "test_type.type": { $ne: "Rapid" },
+          production: false,
         },
         "location_id",
         "location_name"
@@ -64,9 +59,7 @@ const searchCollected = async (req, res) => {
           email: {
             $regex: new RegExp("^" + email + "$", "i"),
           },
-          created_by: req.userId,
-          is_tested: "Yes",
-          "test_type.type": { $ne: "Rapid" },
+          production: false,
         },
         "location_id",
         "location_name"
@@ -78,9 +71,7 @@ const searchCollected = async (req, res) => {
         "patient",
         {
           telephone,
-          created_by: req.userId,
-          is_tested: "Yes",
-          "test_type.type": { $ne: "Rapid" },
+          production: false,
         },
         "location_id",
         "location_name"
@@ -94,9 +85,7 @@ const searchCollected = async (req, res) => {
           pid: {
             $regex: new RegExp("^" + pid + "$", "i"),
           },
-          created_by: req.userId,
-          is_tested: "Yes",
-          "test_type.type": { $ne: "Rapid" },
+          production: false,
         },
         "location_id",
         "location_name"
@@ -108,23 +97,24 @@ const searchCollected = async (req, res) => {
         "patient",
         {
           order_no,
-          created_by: req.userId,
-          is_tested: "Yes",
-          "test_type.type": { $ne: "Rapid" },
+          production: false,
         },
         "location_id",
         "location_name"
       );
       return res.status(200).send({ status: 200, searchPatient });
     }
-    if (bar_code) {
+    if (location_name) {
+      const locations = await findOne("location", {
+        location_name: {
+          $regex: new RegExp("^" + location_name + "$", "i"),
+        },
+      });
       const searchPatient = await getPopulatedData(
         "patient",
         {
-          bar_code,
-          created_by: req.userId,
-          is_tested: "Yes",
-          "test_type.type": { $ne: "Rapid" },
+          location_id: locations._id,
+          production: false,
         },
         "location_id",
         "location_name"
@@ -135,16 +125,10 @@ const searchCollected = async (req, res) => {
       const searchPatient = await getPopulatedData(
         "patient",
         {
-          created_by: req.userId,
-          is_tested: "Yes",
-          $and: [
-            {
-              "test_type.type": {
-                $regex: new RegExp("^" + type + "$", "i"),
-              },
-            },
-            { "test_type.type": { $ne: "Rapid" } },
-          ],
+          "test_type.type": {
+            $regex: new RegExp("^" + type + "$", "i"),
+          },
+          production: false,
         },
         "location_id",
         "location_name"
@@ -161,4 +145,4 @@ const searchCollected = async (req, res) => {
   }
 };
 
-module.exports = searchCollected;
+module.exports = searchAllPatient;
