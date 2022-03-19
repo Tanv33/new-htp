@@ -77,7 +77,7 @@ const searchCollected = async (req, res) => {
       const searchPatient = await getPopulatedData(
         "patient",
         {
-          telephone,
+          telephone: { $regex: telephone, $options: "i" },
           created_by: req.userId,
           is_tested: "Yes",
           "test_type.type": { $ne: "Rapid" },

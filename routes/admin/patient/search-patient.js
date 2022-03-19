@@ -70,7 +70,7 @@ const searchAllPatient = async (req, res) => {
       const searchPatient = await getPopulatedData(
         "patient",
         {
-          telephone,
+          telephone: { $regex: telephone, $options: "i" },
           production: false,
         },
         "location_id",
