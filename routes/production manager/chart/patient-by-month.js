@@ -17,11 +17,12 @@ const patientByMonthsChart = async (req, res) => {
       "November",
       "December",
     ];
-    const manager = await findOne("user", { _id: req.userId });
-    const { manager_location } = manager;
+    const productionManager = await findOne("user", { _id: req.userId });
+    const { production_manager_location } = productionManager;
+    console.log(production_manager_location);
     const patientArr = await getAggregate("patient", [
       {
-        $match: { location_id: { $in: manager_location } },
+        $match: { location_id: { $in: production_manager_location } },
       },
       {
         $group: {
