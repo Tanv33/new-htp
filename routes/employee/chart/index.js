@@ -1,10 +1,6 @@
 const express = require("express");
-const circularChart = require("./circular-chart");
-const patientByMonthsChart = require("./patient-by-months-chart");
-const testTypesChart = require("./test-type-chart");
+const basicGraph = require("./basic");
 const router = express.Router();
 
-router.get("/circular-chart", circularChart);
-router.get("/patient-by-months", patientByMonthsChart);
-router.get("/test-type-chart", testTypesChart);
+router.get("/basic", basicGraph);
 module.exports = router;
