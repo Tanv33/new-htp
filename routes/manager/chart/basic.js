@@ -5,7 +5,7 @@ const {
   findOneAndPopulate,
 } = require("../../../helpers");
 
-const charts = async (req, res) => {
+const basicChart = async (req, res) => {
   try {
     // Graph 1
     const manager = await findOneAndPopulate(
@@ -80,4 +80,4 @@ const charts = async (req, res) => {
     return res.status(400).send({ status: 400, message: e.message });
   }
 };
-module.exports = charts;
+module.exports = basicChart;
