@@ -9,8 +9,8 @@ const schema = Joi.object({
 
 const dateChart = async (req, res) => {
   try {
-    await schema.validateAsync(req.body);
-    const { from, to } = req.body;
+    await schema.validateAsync(req.query);
+    const { from, to } = req.query;
     // Graph 1
     const graph1 = await getAggregate("patient", [
       {
