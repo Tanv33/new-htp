@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const {
   tokenVerification,
-  mpVerification,
+  employeeVerification,
   adminVerification,
   managerVerification,
   prodcutionManagerVerification,
@@ -22,7 +22,7 @@ const { upload } = require("../lib");
 router.use("/auth", auth);
 router.use("/user", tokenVerification, user_Type);
 router.use("/test", tokenVerification, test_Type);
-router.use("/employee", tokenVerification, mpVerification, employee);
+router.use("/employee", tokenVerification, employeeVerification, employee);
 router.use("/admin", tokenVerification, adminVerification, admin);
 router.use("/manager", tokenVerification, managerVerification, manager);
 router.use("/vendor", tokenVerification, vendor);

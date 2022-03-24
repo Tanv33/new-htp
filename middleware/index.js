@@ -1,5 +1,5 @@
 const { tokenVerification } = require("./token-verification");
-const { mpVerification } = require("./medical-profession-verification");
+const { employeeVerification } = require("./employee-verification");
 const { adminVerification } = require("./admin-verification");
 const { managerVerification } = require("./manager-verification");
 const {
@@ -8,7 +8,7 @@ const {
 
 module.exports = {
   tokenVerification,
-  mpVerification,
+  employeeVerification,
   adminVerification,
   managerVerification,
   prodcutionManagerVerification,

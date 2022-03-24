@@ -1,6 +1,6 @@
 const { getPopulatedData } = require("../../helpers");
 
-const mpVerification = async (req, res, next) => {
+const employeeVerification = async (req, res, next) => {
   try {
     const is_mp_user = await getPopulatedData(
       "user",
@@ -8,7 +8,7 @@ const mpVerification = async (req, res, next) => {
       "type",
       "type"
     );
-    let medicalPro = ["Medical Profession", "Asins"];
+    let medicalPro = ["Medical Profession", "Lab Technician", "Asins"];
     if (!medicalPro.includes(is_mp_user[0].type.type)) {
       return res.status(400).send({
         status: 400,
@@ -22,4 +22,4 @@ const mpVerification = async (req, res, next) => {
   }
 };
 
-module.exports = { mpVerification: mpVerification };
+module.exports = { employeeVerification: employeeVerification };
