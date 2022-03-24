@@ -1,14 +1,27 @@
-const { findOne, find } = require("../../../helpers");
+const Joi = require("joi");
+const { findOne, getDataWithLimit } = require("../../../helpers");
+
+const schema = Joi.object({
+  page: Joi.string().required(),
+});
 
 const getTestedtPatient = async (req, res) => {
   try {
+    await schema.validateAsync(req.query);
+    const { page } = req.query;
     const user = await findOne("user", { _id: req.userId });
     const { employee_location } = user;
-    const patients = await find("patient", {
-      location_id: employee_location,
-      is_tested: "Yes",
-      "test_type.type": { $ne: "Rapid" },
-    });
+    const patients = await getDataWithLimit(
+      "patient",
+      {
+        location_id: employee_location,
+        is_tested: "Yes",
+        "test_type.type": { $ne: "Rapid" },
+      },
+      { _id: -1 },
+      page,
+      6
+    );
     return res.status(200).send({ status: 200, patients });
   } catch (e) {
     console.log(e);
