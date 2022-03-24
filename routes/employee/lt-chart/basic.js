@@ -1,31 +1,68 @@
-const { getAggregate, findOne } = require("../../../helpers");
+const { getAggregate, findOne, find } = require("../../../helpers");
 
 const basicChart = async (req, res) => {
   try {
     const user = await findOne("user", { _id: req.userId });
     const { employee_location } = user;
+    const mdType = await findOne("userType", {
+      type: "Medical Profession",
+    });
+    const medicalProfessions = await find("user", {
+      employee_location,
+      type: mdType?._id,
+    });
+    // console.log(medicalProfessions);
+
+    // Graph 1
     const graph1 = await getAggregate("patient", [
       {
         $match: {
           location_id: employee_location,
           "test_type.type": { $ne: "Rapid" },
+          is_tested: "Yes",
         },
       },
       {
         $group: {
-          _id: "$is_tested",
+          _id: "$patient_result",
           noOfPatient: {
             $sum: 1,
           },
         },
       },
       {
-        $addFields: { is_tested: "$_id" },
+        $addFields: { patient_result: "$_id" },
       },
       {
         $project: { _id: 0 },
       },
     ]);
+
+    // Graph 2
+    // const graph2 = await getAggregate("patient", [
+    //   {
+    //     $match: {
+    //       location_id: employee_location,
+    //       "test_type.type": { $ne: "Rapid" },
+    //     },
+    //   },
+    //   {
+    //     $group: {
+    //       _id: "$is_tested",
+    //       noOfPatient: {
+    //         $sum: 1,
+    //       },
+    //     },
+    //   },
+    //   {
+    //     $addFields: { is_tested: "$_id" },
+    //   },
+    //   {
+    //     $project: { _id: 0 },
+    //   },
+    // ]);
+
+    // return res.status(200).send({ status: 200, graph1, graph2 });
     return res.status(200).send({ status: 200, graph1 });
   } catch (e) {
     console.log(e);
