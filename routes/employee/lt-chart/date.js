@@ -1,7 +1,15 @@
-const { getAggregate, findOne, find } = require("../../../helpers");
+const { getAggregate, findOne } = require("../../../helpers");
+const Joi = require("joi");
 
-const basicChart = async (req, res) => {
+const schema = Joi.object({
+  from: Joi.date().required(),
+  to: Joi.date().required(),
+});
+
+const dateChart = async (req, res) => {
   try {
+    await schema.validateAsync(req.query);
+    const { from, to } = req.query;
     const user = await findOne("user", { _id: req.userId });
     const { employee_location } = user;
 
@@ -12,6 +20,7 @@ const basicChart = async (req, res) => {
           location_id: employee_location,
           "test_type.type": { $ne: "Rapid" },
           is_tested: "Yes",
+          createdAt: { $gte: new Date(from), $lte: new Date(to) },
         },
       },
       {
@@ -37,6 +46,7 @@ const basicChart = async (req, res) => {
           location_id: employee_location,
           "test_type.type": { $ne: "Rapid" },
           is_tested: "Yes",
+          createdAt: { $gte: new Date(from), $lte: new Date(to) },
         },
       },
       {
@@ -81,6 +91,7 @@ const basicChart = async (req, res) => {
           location_id: employee_location,
           "test_type.type": { $ne: "Rapid" },
           is_tested: "Yes",
+          createdAt: { $gte: new Date(from), $lte: new Date(to) },
         },
       },
       {
@@ -121,4 +132,4 @@ const basicChart = async (req, res) => {
     return res.status(400).send({ status: 400, message: e.message });
   }
 };
-module.exports = basicChart;
+module.exports = dateChart;
