@@ -94,7 +94,48 @@ const basicChart = async (req, res) => {
       // },
     ]);
 
-    return res.status(200).send({ status: 200, graph1, graph2 });
+    // Graph 3
+    const graph3 = await getAggregate("patient", [
+      {
+        $match: {
+          location_id: employee_location,
+          "test_type.type": { $ne: "Rapid" },
+          is_tested: "Yes",
+        },
+      },
+      {
+        $group: {
+          _id: "$test_type.type",
+          negative: {
+            $sum: {
+              $cond: [{ $eq: ["$patient_result", "Negative"] }, 1, 0],
+            },
+          },
+          positive: {
+            $sum: {
+              $cond: [{ $eq: ["$patient_result", "Positive"] }, 1, 0],
+            },
+          },
+          inconclusive: {
+            $sum: {
+              $cond: [{ $eq: ["$patient_result", "Inconclusive"] }, 1, 0],
+            },
+          },
+          pending: {
+            $sum: {
+              $cond: [{ $eq: ["$patient_result", "Pending"] }, 1, 0],
+            },
+          },
+        },
+      },
+      {
+        $addFields: { type: "$_id" },
+      },
+      {
+        $project: { _id: 0 },
+      },
+    ]);
+    return res.status(200).send({ status: 200, graph1, graph2, graph3 });
     // return res.status(200).send({ status: 200, graph1 });
   } catch (e) {
     console.log(e);
