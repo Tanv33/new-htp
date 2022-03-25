@@ -153,9 +153,14 @@ const addPatient = async (req, res) => {
     if (last_name) {
       name = last_name;
     }
-    const check_test_type_exist = await findOne("testType", {
-      name: test_type.name,
-      types: test_type.type,
+    const check_test_type_exist = await findOne("location", {
+      _id: employee_location._id,
+      test: {
+        $elemMatch: {
+          name: test_type.name,
+          types: { $in: [test_type.type] },
+        },
+      },
     });
     console.log(check_test_type_exist);
     if (!check_test_type_exist) {
