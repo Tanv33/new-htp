@@ -1,5 +1,5 @@
 const Joi = require("joi");
-const { findOne, getDataWithLimit } = require("../../../helpers");
+const { findOne, getDataWithLimit, getCount } = require("../../../helpers");
 
 const schema = Joi.object({
   page: Joi.string().required(),
@@ -22,7 +22,12 @@ const getTestedtPatient = async (req, res) => {
       page,
       6
     );
-    return res.status(200).send({ status: 200, patients });
+    const length = await getCount("patient", {
+      location_id: employee_location,
+      is_tested: "Yes",
+      "test_type.type": { $ne: "Rapid" },
+    });
+    return res.status(200).send({ status: 200, length, patients });
   } catch (e) {
     console.log(e);
     return res.status(400).send({ status: 400, message: e.message });

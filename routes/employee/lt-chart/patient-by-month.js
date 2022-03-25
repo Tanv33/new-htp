@@ -31,17 +31,24 @@ const patientByMonthsChart = async (req, res) => {
             // year: { $year: "$createdAt" },
             year: { $year: new Date() },
           },
-          totalPatient: {
-            $sum: 1,
-          },
-          testedPatient: {
+          negative: {
             $sum: {
-              $cond: [{ $eq: ["$is_tested", "Yes"] }, 1, 0],
+              $cond: [{ $eq: ["$patient_result", "Negative"] }, 1, 0],
             },
           },
-          unTestedPatient: {
+          positive: {
             $sum: {
-              $cond: [{ $eq: ["$is_tested", "No"] }, 1, 0],
+              $cond: [{ $eq: ["$patient_result", "Positive"] }, 1, 0],
+            },
+          },
+          inconclusive: {
+            $sum: {
+              $cond: [{ $eq: ["$patient_result", "Inconclusive"] }, 1, 0],
+            },
+          },
+          pending: {
+            $sum: {
+              $cond: [{ $eq: ["$patient_result", "Pending"] }, 1, 0],
             },
           },
         },
