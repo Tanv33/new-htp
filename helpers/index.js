@@ -17,6 +17,13 @@ const searchDocuments = async (modelDb, queryObj) =>
 const updateDocument = async (modelDb, updateQuery, setQuery) => {
   return Models[modelDb].updateOne(updateQuery, { $set: setQuery });
 };
+
+const updateManyDocument = async (modelDb, updateQuery, setQuery) => {
+  return Models[modelDb].updateMany(updateQuery, { $set: setQuery });
+};
+const customUpdate = async (modelDb, updateQuery, setQuery) => {
+  return Models[modelDb].update(updateQuery, setQuery);
+};
 const findOneSort = async (modelDb, queryObj) =>
   await Models[modelDb]?.findOne(queryObj).sort({ _id: -1 }).exec();
 
@@ -264,4 +271,6 @@ module.exports = {
   csvFileArr,
   findOneAndPopulate,
   findAndSelect,
+  updateManyDocument,
+  customUpdate,
 };

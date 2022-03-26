@@ -7,6 +7,8 @@ const {
   getDropBoxLink,
   _base64ToArrayBuffer,
   generateRandomNumber,
+  find,
+  updateManyDocument,
 } = require("../../../helpers");
 const bcrypt = require("bcryptjs");
 const fs = require("fs");
@@ -126,7 +128,6 @@ const signUpUser = async (req, res, next) => {
           message: "Manager Signature should be in base64",
         });
       }
-
       let imageType = ["image/png", "image/jpeg", "image/jpg", "image/gif"];
       if (!req.files.manager_logo) {
         return res.status(400).send({
@@ -162,11 +163,17 @@ const signUpUser = async (req, res, next) => {
           .send({ status: 404, message: "User Type not exist!" });
       }
       const { _id } = check_user_type_exist;
+      let user_test_types_Arr = await find("testType", {});
+      user_test_types_Arr = user_test_types_Arr?.map((element) => {
+        return {
+          name: element?.name,
+          types: element?.types,
+        };
+      });
       req.body.manager_logo = await getDropBoxLink(
         "/manager logos/" + mid + "-" + req.files.manager_logo[0].filename,
         req.files.manager_logo[0].path
       );
-
       req.body.manager_signature = await getDropBoxLink(
         "/manager signature/" +
           mid +
@@ -189,6 +196,7 @@ const signUpUser = async (req, res, next) => {
         manager_logo: req.body.manager_logo,
         manager_signature: req.body.manager_signature,
         password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
+        user_test_type: user_test_types_Arr,
       });
       // res.status(200).send({ status: 200, user: new_user });
       send_email(
@@ -219,7 +227,6 @@ const signUpUser = async (req, res, next) => {
           message: "Production Manager Signature should be in base64",
         });
       }
-
       let imageType = [
         "image/png",
         "image/jpeg",
@@ -264,6 +271,13 @@ const signUpUser = async (req, res, next) => {
           .send({ status: 404, message: "User Type not exist!" });
       }
       const { _id } = check_user_type_exist;
+      let user_test_types_Arr = await find("testType", {});
+      user_test_types_Arr = user_test_types_Arr?.map((element) => {
+        return {
+          name: element?.name,
+          types: element?.types,
+        };
+      });
       req.body.production_manager_logo = await getDropBoxLink(
         "/production manager logos/" +
           pmid +
@@ -271,7 +285,6 @@ const signUpUser = async (req, res, next) => {
           req.files.production_manager_logo[0].filename,
         req.files.production_manager_logo[0].path
       );
-
       req.body.production_manager_signature = await getDropBoxLink(
         "/production manager signature/" +
           pmid +
@@ -297,6 +310,7 @@ const signUpUser = async (req, res, next) => {
         production_manager_logo: req.body.production_manager_logo,
         production_manager_signature: req.body.production_manager_signature,
         password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
+        user_test_type: user_test_types_Arr,
       });
       // res.status(200).send({ status: 200, user: new_user });
       send_email(

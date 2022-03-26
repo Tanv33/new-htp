@@ -97,6 +97,9 @@ const userSchema = new mongoose.Schema(
       ref: "location",
       // requried: true,
     },
+    user_test_type: {
+      type: schemaType.TypeArray,
+    },
   },
   { timestamps: true }
 );
