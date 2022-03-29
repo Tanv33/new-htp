@@ -1,0 +1,153 @@
+const {
+  csvFileArr,
+  updateDocument,
+  findOneAndPopulate,
+  generatePdf,
+  generateRandomNumber,
+  getDropBoxLink,
+  todayDateFormat,
+} = require("../../../helpers");
+const { send_email } = require("../../../lib");
+const testResultSignOff = require("../../../public/pdf/testResultSignoff");
+
+const firePatientWithCsv = async (req, res) => {
+  try {
+    // console.log(req.file);
+    // if (!req.file) {
+    //   return res
+    //     .status(400)
+    //     .send({ status: 400, mesaage: "CSV file required" });
+    // }
+    // if (req.file.mimetype !== "text/csv") {
+    //   return res
+    //     .status(400)
+    //     .send({ status: 400, mesaage: "Only CSV file allowed" });
+    // }
+    // const fileData = await csvFileArr(req.file.path);
+    // const newData = Array.from(new Set(fileData.map(JSON.stringify))).map(
+    //   JSON.parse
+    // );
+    // newData.map((object, i) => {
+    //   if (object?.order_no || object?.pid || object?.pateint_result) {
+    //     return res
+    //       .status(400)
+    //       .send({ status: 400, message: "field missing in csv" });
+    //   }
+    // });
+    // const duplicate = fileData.length - newData.length;
+    // // io.emit("csv", {
+    // //   givenData: fileData.length,
+    // //   acceptedData: newData.length,
+    // //   duplicate,
+    // // });
+    // await newData.map(async ({ order_no, pid, patient_result }, index, arr) => {
+    //   const percentage = (((index + 1) * 100) / arr.length).toFixed(0);
+    //   const findPatient = await findOneAndPopulate(
+    //     "patient",
+    //     {
+    //       is_tested: "Yes",
+    //       pid,
+    //       order_no,
+    //     },
+    //     "location_id"
+    //   );
+    //   if (!findPatient) {
+    //     return res.status(400).send({
+    //       status: 400,
+    //       message: "No Patient Found with your given credentials",
+    //     });
+    //   }
+    //   const testResult = await generatePdf(
+    //     testResultSignOff(
+    //       findPatient,
+    //       "Your Covid Rapid Result is " + patient_result
+    //     ),
+    //     `./public/rapidfire pdf/rapid${generateRandomNumber(
+    //       11111,
+    //       99999
+    //     ).toFixed(0)}.pdf`
+    //   );
+    //   // getting signaturepdf URL from Dropbox
+    //   const firePatientPdfLink = await getDropBoxLink(
+    //     "/fire  pdf/" +
+    //       `${order_no}-${generateRandomNumber(11111, 99999).toFixed(0)}.pdf`,
+    //     testResult.filename,
+    //     false
+    //   );
+    //   const patient_result_date = todayDateFormat();
+    //   const patient_test_result_sign_off = firePatientPdfLink;
+    //   await updateDocument(
+    //     "patient",
+    //     {
+    //       is_tested: "Yes",
+    //       order_no,
+    //       pid,
+    //     },
+    //     { patient_result_date, patient_test_result_sign_off, patient_result }
+    //   );
+    //   send_email(
+    //     res,
+    //     "patientResultTemp",
+    //     {
+    //       fullName: findPatient?.first_name + " " + findPatient?.last_name,
+    //       testNmae: findPatient?.test_type?.type,
+    //       testLocaiton: findPatient?.location_id?.location_name,
+    //       telephone: findPatient?.telephone,
+    //       locationDescription: findPatient?.location_id?.consent,
+    //       location_logo: findPatient?.location_id?.location_logo,
+    //     },
+    //     "Health Titan Pro",
+    //     "Your Covid Rapid result",
+    //     findPatient.email,
+    //     [
+    //       {
+    //         filename: "result.pdf",
+    //         path: testResult.filename, // Path of signature file
+    //       },
+    //     ]
+    //   );
+
+    //   // console.log(percentage);
+    //   if (percentage == 25) {
+    //     console.log("25% Done");
+    //     // io.emit("csv", {
+    //     //   message: "25% Done",
+    //     // });
+    //   }
+    //   if (percentage == 50) {
+    //     console.log("50% Done");
+    //     // io.emit("csv", {
+    //     //   message: "50% Done",
+    //     // });
+    //   }
+    //   if (percentage == 75) {
+    //     console.log("75% Done");
+    //     // io.emit("csv", {
+    //     //   message: "75% Done",
+    //     // });
+    //   }
+    //   if (percentage == 100) {
+    //     console.log("100% Done");
+    //     // io.emit("csv", {
+    //     //   message: "100% Done",
+    //     // });
+    // return res.status(200).send({
+    //   status: 200,
+    //   message: "CSV file uploaded successfully ",
+    //   givenData: fileData.length,
+    //   acceptedData: newData.length,
+    //   duplicate,
+    // });
+    //   }
+    // });
+    return res.status(200).send({
+      status: 200,
+      message: "Api is in progress",
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(400).send({ status: 400, mesaage: e.message });
+  }
+};
+
+module.exports = firePatientWithCsv;
