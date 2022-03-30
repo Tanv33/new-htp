@@ -1,4 +1,4 @@
-const { customUpdate } = require("../../../helpers");
+const { customUpdate, findOne } = require("../../../helpers");
 const Joi = require("joi");
 
 const schema = Joi.object({
@@ -11,6 +11,19 @@ const deleteNewTestType = async (req, res) => {
     await schema.validateAsync(req.query);
     const { id, name } = req.query;
     // Delete Specific Object
+    const if_exist = await findOne("location", {
+      _id: id,
+      test: {
+        $elemMatch: {
+          name,
+        },
+      },
+    });
+    if (!if_exist) {
+      return res
+        .status(400)
+        .send({ status: 400, message: "Your Given name not exist" });
+    }
     await customUpdate(
       "location",
       {
