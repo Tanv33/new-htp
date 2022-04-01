@@ -17,7 +17,7 @@ const deleteUserTestType = async (req, res) => {
       "type"
     );
     if (check_user?.type?.type === "Asins") {
-      await adminSchema.validateAsync(req.body);
+      await adminSchema.validateAsync(req.query);
       const { name, id } = req.query;
       // Delete Specific Object
       await customUpdate(
