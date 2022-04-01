@@ -18,7 +18,8 @@ const firePatientWithCsv = async (req, res) => {
         .status(400)
         .send({ status: 400, mesaage: "CSV file required" });
     }
-    if (req.file.mimetype !== "text/csv") {
+    const csvRegex = /.csv$/g;
+    if (!csvRegex.test(req?.file?.originalname)) {
       return res
         .status(400)
         .send({ status: 400, mesaage: "Only CSV file allowed" });
