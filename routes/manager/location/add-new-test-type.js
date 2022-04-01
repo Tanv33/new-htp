@@ -1,5 +1,5 @@
 const Joi = require("joi");
-const { pushIfNotExists } = require("../../../helpers");
+const { pushIfNotExists, findOneAndPopulate } = require("../../../helpers");
 
 const schema = Joi.object({
   name: Joi.string().required(),
@@ -14,6 +14,28 @@ const addNewTestType = async (req, res) => {
     await paramsSchema.validateAsync(req.params);
     const { id } = req.params;
     const { name, types } = req.body;
+    const check_user = await findOneAndPopulate(
+      "user",
+      { _id: req.userId },
+      "type"
+    );
+    // Asins
+    if (check_user?.type?.type === "Asins") {
+      // Add name and Types
+      await pushIfNotExists(
+        "location",
+        {
+          _id: id,
+        },
+        {
+          test: { name, types },
+        }
+      );
+      return res
+        .status(200)
+        .send({ status: 200, message: "test type added successfully" });
+    }
+    // Manager
     // Add name and Types
     await pushIfNotExists(
       "location",

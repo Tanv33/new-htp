@@ -1,4 +1,4 @@
-const { findOne, customUpdate } = require("../../helpers");
+const { findOne, customUpdate, findOneAndPopulate } = require("../../helpers");
 const Joi = require("joi");
 
 const schema = Joi.object({
